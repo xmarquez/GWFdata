@@ -1,0 +1,20 @@
+Package: GWFdata
+Type: Package
+Title: Replication data for the book "How Dictatorships Work" by Barbara Geddes, Joseph Wright, and Erica Frantz
+Version: 0.1.0
+Description: Contains the replication dataset for book "How Dictatorships Work" by Barbara Geddes, Joseph Wright, and Erica Frantz, including the codebook.
+Authors@R: person("Xavier", "Marquez", role=c("aut", "cre"),
+  email = "marquez.x@gmail.com")
+License: GPL-3
+Depends:
+    R (>= 2.10)
+RoxygenNote: 6.1.0
+Roxygen: list(markdown = TRUE)
+Encoding: UTF-8
+LazyData: true
+Suggests: testthat,
+    rmarkdown
+URL: https://github.com/xmarquez/GWFdata
+BugReports: https://github.com/xmarquez/GWFdata/issues
+Imports: 
+    tibble
