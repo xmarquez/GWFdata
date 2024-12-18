@@ -1,0 +1,381 @@
+---
+title: "Replicating Wright 2019"
+bibliography: "Wright Replication.bib"
+output:  bookdown::html_notebook2
+---
+
+This vignette describes how one can use the data in this package to replicate the latent variable indexes described in @wrightLatentCharacteristicsThat2021 and used in @geddesHowDictatorshipsWork2018. This is based on the Stata .do file archived at the [Political Science Research and Methods dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O). 
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+First we set up our libraries and data.
+
+```{r setup}
+library(GWFdata)
+library(tidyverse)
+library(mirt)
+library(psych) 
+theme_set(theme_bw())
+
+gwf <- GWFdata::gwf # Not strictly necessary; gwf is already available by typing `gwf` once you load the library.
+
+# Create 'createparty' variable
+gwf <- gwf |>
+  mutate(newparty = if_else(lag(supportparty, default = 0) == 0 & supportparty == 1, 1, 0),
+         createparty = if_else(militparty_newparty == 1 | (newparty == 1 & partyhistory_postseizure == 1), 1, 0),
+         milmerit_pers_recoded = recode(milmerit_pers, `2` = 1, `1` = 0)) # Recode milmerit_pers for binary IRT
+
+# Exploratory Factor Analysis (EFA) 
+global_allvar1 <- c("partyrbrstmp", "militrank", "ldrrotation", "milconsult", "milmerit_mil",
+                    "milmerit_pers", "milnotrial", "plebiscite", "heirclan", "officepers")
+global_allvar2 <- c("paramil_pers", "paramil_party", "paramil_fightrebel", "supportparty", "partyleader",
+                    "localorgzns", "partymins", "excomcivn", "multiethnic")
+global_allvar3 <- c("monoethnic", "heirparty", "heirfamily", "legcompetn", "leaderrelatvs", "leaderciv",
+                    "leadermil", "leaderrebel", "heirciv", "cabciv", "cabmil", "partymilit")
+global_allvar4 <- c("ldr_group_priordem", "ldr_group_domparty", "ldr_group_military", "ldr_group_insurgency",
+                    "ldr_group_civsucc", "ldr_group_other", "ldr_group_foreign", "ldr_group_hereditary",
+                    "seizure_coup", "seizure_rebel")
+global_allvar5 <- c("seizure_uprising", "seizure_election", "seizure_succession", "seizure_family")
+global_allvar6 <- c("partyhistory_priornosupport", "partyhistory_priorwonsupport", "partyhistory_insurgent",
+                    "partyhistory_priordem", "partyhistory_noparty", "partyhistory_priorelection")
+global_allvar7 <- c("militparty_allyparty", "militparty_noparty", "militparty_priorparty", "nomilitary",
+                    "milethnic_inclusive", "milethnic_hetero", "milethnic_homo", "sectyapp_party")
+global_allvar8 <- c("sectyapp_pers", "electldr_priordict", "electldr_priordem", "electldr_notelect",
+                    "electldr_1candidate", "electldr_1faction", "electldr_multileg", "electldr_multiexec")
+global_allvar9 <- c("legnoms_indirect", "legnoms_veto", "legnoms_noveto", "legnoms_priordem",
+                    "ldr_exp_highrank", "ldr_exp_lowrank", "ldr_exp_rebel", "ldr_exp_demelect", "ldr_exp_supportparty")
+global_allvar10 <- c("ldr_exp_pers_loyal", "ldr_exp_pers_relative", "ldr_exp_rulingfamily", "ldr_exp_other",
+                     "partyexcom_pers", "partyexcom_faction", "partyexcom_oppose", "createparty")
+
+all_global_vars <- c(global_allvar1, global_allvar2, global_allvar3, global_allvar4, global_allvar5,
+                     global_allvar6, global_allvar7, global_allvar8, global_allvar9, global_allvar10)
+
+```
+
+## Factor Analysis
+
+We first replicate the factor analysis in the paper. Figure \@ref(fig:fig-b1) reproduces figure B-1 of the @wrightLatentCharacteristicsThat2021 supplementary material.
+
+```{r}
+#| label: fig-b1
+#| fig-cap: "Figure B1 of the appendix: Eigenvalues."
+
+gwf_filtered <- gwf |> select(all_of(all_global_vars)) |> na.omit()
+
+# Ensure selected variables are numeric and handle missing values
+efa_data <- gwf_filtered |>
+  select(all_of(all_global_vars)) |>
+  mutate(across(everything(), as.numeric)) |>
+  drop_na()
+
+# Scree Plot
+fa.parallel(efa_data, fa = "fa", main = "Scree Plot for EFA")
+```
+Here are the factor loadings, closely replicating the figures in the paper.
+
+```{r}
+#| label: loadings
+# Run EFA with Promax rotation
+efa_result <- fa(efa_data, nfactors = 4, rotate = "promax")
+
+# View factor loadings
+print(efa_result$loadings, cutoff = 0.3) 
+```
+
+The next three plots closely reproduce figure 1 in the paper, showing the extent to which individual variables load onto each of the first three dimensions of autocratic rule identified in the paper: party (Figure \@ref(fig:fig-party)), military (Figure \@ref(fig:fig-military)), and personal (Figure \@ref(fig:fig-personal)).
+
+```{r}
+#| label: fig-party
+#| fig-cap: "Party dimension of autocratic rule. Reproduces the top panel of Figure 1."
+# Predict factor scores
+efa_scores <- factor.scores(efa_data, efa_result)$scores |>
+  as_tibble()
+
+gwf <- gwf |>
+  bind_cols(efa_scores) |>
+  rename(party_factor = MR1, military_factor = MR2, 
+         personalism_factor = MR3, other_factor = MR4)
+
+# Visualize Loadings
+
+varnames <- dimnames(efa_result$loadings)[[1]]
+loadings_df <- efa_result$loadings |>
+  matrix(84, 4) |>
+  as_tibble(.name_repair = "unique") |>
+  set_names(c("MR1", "MR2", "MR3", "MR4")) |>
+  mutate(Variable = varnames)
+
+loadings_df |>
+  pivot_longer(MR1:MR4) |>
+  filter(name == "MR1") |>
+  mutate(name = "Party") |>
+  ggplot(aes(x = fct_reorder(Variable, value), y = value, label = Variable)) +
+  geom_point(color = 'blue') +
+  facet_wrap(~name, scales = "free_x") +
+  geom_hline(yintercept = 0, color = "red") +
+  scale_x_discrete() +
+  labs(x = "", y = "Factor 1 loadings") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+```
+
+```{r}
+#| label: fig-military
+#| fig-cap: "Military dimension of autocratic rule. Reproduces the middle panel of Figure 1."
+loadings_df |>
+  pivot_longer(MR1:MR4) |>
+  filter(name == "MR2") |>
+  mutate(name = "Military") |>
+  ggplot(aes(x = fct_reorder(Variable, value), y = value, label = Variable)) +
+  geom_point(color = 'blue') +
+  facet_wrap(~name, scales = "free_x") +
+  geom_hline(yintercept = 0, color = "red") +
+  scale_x_discrete() +
+  labs(x = "", y = "Factor 2 loadings") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+
+```{r}
+#| label: fig-personal
+#| fig-cap: "Personal dimension of autocratic rule. Reproduces the bottom panel of Figure 1."
+loadings_df |>
+  pivot_longer(MR1:MR4) |>
+  filter(name == "MR3") |>
+  mutate(name = "Personalism") |>
+  ggplot(aes(x = fct_reorder(Variable, value), y = value, label = Variable)) +
+  geom_point(color = 'blue') +
+  facet_wrap(~name, scales = "free_x") +
+  geom_hline(yintercept = 0, color = "red") +
+  scale_x_discrete() +
+  labs(x = "", y = "Factor 3 loadings") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+We can use the factor scores to reproduce figure 2 in the paper, illustrating the three dimensions of autocratic rule in China (Figure \@ref(fig:fig-china)).
+
+```{r}
+#| label: fig-china
+#| fig-cap: "Three dimensions of autocratic rule in China. Reproduces figure 2 of the paper."
+
+gwf |>
+  select(gwf_country, year, ends_with("_factor")) |>
+  filter(gwf_country == "China") |>
+  pivot_longer(party_factor:other_factor) |>
+  filter(name != "other_factor") |>
+  mutate(name = case_when(name == "party_factor" ~ "party strength",
+                          name == "military_factor" ~ "military autonomy",
+                          name == "personalism_factor" ~ "personalism")) |>
+  ggplot(aes(x = year, y = value, linetype = fct_relevel(name,"personalism", "military autonomy"),
+             color = fct_relevel(name,"personalism", "military autonomy"))) +
+  geom_line() +
+  labs(y = "Latent dimensions", x = "Year", linetype = "", color = "") +
+  guides(linetype = guide_legend(position = "bottom"),
+         color = guide_legend(position = "bottom")) +
+  facet_wrap(~gwf_country)
+```
+The correlations with measures of democracy reported in Figure 3 of the paper can be produced using the `democracyData` package, available from [https://github.com/xmarquez/democracyData](https://github.com/xmarquez/democracyData). Figure \@ref(fig:fig-correlations-dem) replicates Figure 3 of @wrightLatentCharacteristicsThat2021.
+
+```{r correlations_dem, message = FALSE}
+#| label: fig-correlations-dem
+#| fig-cap: "Corrleation matrix of latent dimensions of autocratic structure with measures of democracy. Replicates Figure 3 of the paper."
+library(democracyData)
+dem_scores <- generate_democracy_scores_dataset(c("vdem", "fh", "uds_2014", "polity"), output_format = "wide", verbose = FALSE)
+
+data <- gwf |>
+  left_join(dem_scores)
+
+data |>
+  select(v2x_polyarchy, polity2, fh_total_reversed, uds_2014_mean, 
+         gwf_leader_duration, party_factor, military_factor, personalism_factor) |>
+  corrr::correlate() |>
+  corrr::rplot(print_cor = TRUE)  +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+```
+Correlations with measures of personalism and military used by @weeksDictatorsWarPeace2014 and the original GWF dataset [@geddesAutocraticBreakdownRegime2014] are also reported in @wrightLatentCharacteristicsThat2021. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of @kailitzClassifyingPoliticalRegimes2013. We can thus replicate Table 1 of the paper (\@ref(tbl:tbl-corrs)).
+
+```{r, message = FALSE}
+#| label: tbl-corrs
+#| tbl-cap: "Correlations of extant typologies with dimensions of autocratic structure. Reproduces Table 1 in the paper."
+
+gwf_all <- democracyData::gwf_all
+weeks <- GWFdata::weeks
+kailitz <- democracyData::kailitz |>
+  rename_with(\(x) paste0("kailitz_", x), .cols = c(personal:monarchy))
+
+data <- gwf |> 
+  left_join(gwf_all) |>
+  left_join(weeks) |>
+  left_join(kailitz)
+
+data |>
+  select(party_factor:personalism_factor, gwf_party:gwf_personal, 
+         juntajlw_2014_1:personalgeddes_2014_1, 
+         kailitz_personal:kailitz_monarchy) |>
+  mutate(across(everything(), as.numeric)) |>
+  corrr::correlate() |>
+  select(term:personalism_factor) |>
+  filter(!term %in% c("other_factor", "party_factor", "personalism_factor", "military_factor")) |>
+  knitr::kable(digits = 2)
+
+```
+
+## Latent Dimensions IRT model
+
+The code below closely replicates the item-response theory model of autocratic rule described in section 7 of @wrightLatentCharacteristicsThat2021.
+
+```{r}
+
+  # IRT Modeling (2PL model)
+  ## Define variables for personalism
+  pers11 <- c("sectyapp_pers", "officepers", "paramil_pers", "milmerit_pers_recoded", 
+              "milnotrial", "partyexcom_pers", "partyrbrstmp", "leaderrelatvs", 
+              "heirfamily", "heirclan", "createparty")
+
+  # Fit 2PL IRT model
+  pers_irt_model <- mirt::mirt(gwf |> 
+                            select(all_of(pers11)), 
+                          model = 1, itemtype = "2PL", SE = TRUE,
+                          verbose = FALSE)
+
+  # Extract factor scores
+  pers_irt_scores <- mirt::fscores(pers_irt_model, full.scores.SE = TRUE,
+                                   verbose = FALSE) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("pers_irt_11_", x))
+  
+  gwf <- gwf |> bind_cols(pers_irt_scores)
+
+  pers10 <- pers11[!pers11 %in% "heirclan"]
+  pers_irt_model_10 <- mirt::mirt(gwf |> select(all_of(pers10)), 
+                             model = 1, itemtype = "2PL", SE = TRUE,
+                             verbose = FALSE)
+  pers_irt_scores_10 <- mirt::fscores(pers_irt_model_10, full.scores.SE = TRUE,
+                                      verbose = FALSE) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("pers_irt_10_", x))
+  
+  gwf <- gwf |> bind_cols(pers_irt_scores_10)
+
+  # Repeat for 8 variables
+  pers8 <- pers10[!pers10 %in% c("leaderrebel", "heirfamily")]
+  pers_irt_model_8 <- mirt::mirt(gwf |> select(all_of(pers8)), 
+                            model = 1, itemtype = "2PL",
+                            verbose = FALSE)
+  pers_irt_scores_8 <- mirt::fscores(pers_irt_model_8) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("pers_irt_8_", x))
+  
+  gwf <- gwf |> bind_cols(pers_irt_scores_10)
+
+  # Full info IRT model (2PL + GRM for milmerit_pers)
+  ## Define variables for personalism
+  pers10_mixed <- pers11[!pers11 %in% c("milmerit_pers_recoded")]
+
+  # Specify model: 2PL for binary, GRM for polytomous variables
+  mixed_model <- 'F1 = 1-10 
+                  milmerit = grsm'
+
+  # Fit full IRT model
+  pers_irt_mixed <- mirt::mirt(gwf |> 
+                            select(all_of(c(pers10_mixed, "milmerit_pers"))), 
+                          model = mixed_model,
+                          itemtype = "Rasch", SE = TRUE)
+  
+  pers_irt_scores_mixed <- mirt::fscores(pers_irt_model_8, full.scores.SE = TRUE) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("pers_irt_11_full_info_", x))
+
+  gwf <- gwf |> 
+    bind_cols(pers_irt_scores_mixed)
+
+```
+
+
+Note that the variables used in the IRT model can be selected directly from the loadings data frame, as the 11 variables with loadings greater than 0.3 on the third factor:
+
+```{r}
+personalism_vars <- loadings_df |>
+  filter(MR3 > 0.3) |>
+  pull(Variable)
+
+personalism_vars[personalism_vars == "milmerit_pers"] <- "milmerit_pers_recoded"
+
+personalism_vars[!personalism_vars %in% pers11]
+
+```
+
+We can use the same procedure to calculate party and military dimensions of rule as well, using the necessary party and military vars.
+
+```{r}
+party_vars <- loadings_df |>
+  filter(MR1 > 0.3) |>
+  pull(Variable)
+
+military_vars <- loadings_df |>
+  filter(MR2 > 0.3) |>
+  pull(Variable)
+
+gwf |> 
+  select(all_of(party_vars)) |>
+  summarise(across(everything(), n_distinct))
+
+# We need a graded model
+
+party_irt_model <- mirt::mirt(gwf |> 
+                            select(all_of(party_vars)), 
+                          model = 1, itemtype = "graded", SE = TRUE,
+                          verbose = FALSE)
+
+# Extract factor scores
+party_irt_scores <- mirt::fscores(party_irt_model, full.scores.SE = TRUE) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("party_irt_11_", x))
+  
+gwf <- gwf |> bind_cols(party_irt_scores)
+
+military_irt_model <- mirt::mirt(gwf |> 
+                            select(all_of(military_vars)), 
+                          model = 1, itemtype = "graded", SE = TRUE,
+                          verbose = FALSE)
+
+# Extract factor scores
+military_irt_scores <- mirt::fscores(military_irt_model, full.scores.SE = TRUE) |>
+    as_tibble() |>
+    rename_with(\(x) paste0("military_irt_11_", x))
+  
+gwf <- gwf |> bind_cols(military_irt_scores)
+
+```
+
+This index also can be used to visualize the evolution of the latent dimensions in China (Figure \@ref(fig:fig-china-irt)), which is not significantly different from simply using the factor scores but includes the standard error and is on a different scale.
+
+```{r}
+#| label: fig-china-irt
+#| fig-cap: "Evolution of latent dimensions of rule in China. Uses IRT model results."
+gwf |>
+  select(gwf_country, year, contains("_irt_11")) |>
+  pivot_longer(
+    cols = contains("_irt_11"),
+    names_to = c("variable", ".value"),
+    names_pattern = "(.*_irt_11|.*_irt_11_full_info)_(F1|SE_F1)"
+  ) |>
+  filter(gwf_country == "China") |>
+  ggplot(aes(x = year, y = F1, color = variable)) +
+  geom_line() +
+  geom_pointrange(aes(ymin = F1-SE_F1, ymax = F1 + SE_F1)) +
+  labs(y = "Personalism dimension", x = "Year", linetype = "", color = "") +
+  facet_wrap(~gwf_country)
+```
+
+```{r, include = FALSE}
+gwf_irt <- gwf |> select(gwf_country, cowcode, year, contains("_irt_"), ends_with("_factor"))
+gwf <- gwf |> select(-contains("_irt_"), -ends_with("_factor"), -matches("pr\\d$"))
+usethis::use_data(gwf, gwf_irt, overwrite = TRUE)
+```
+
+## References
+
