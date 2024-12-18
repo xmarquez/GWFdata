@@ -20,7 +20,8 @@ Suggests:
     democracyData (>= 0.5.1),
     mirt,
     psych,
-    tidyverse
+    tidyverse,
+    corrr
 URL: https://github.com/xmarquez/GWFdata, https://xmarquez.github.io/GWFdata/
 BugReports: https://github.com/xmarquez/GWFdata/issues
 Imports: 
