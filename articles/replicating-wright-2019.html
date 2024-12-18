@@ -50,14 +50,11 @@
 </nav><div class="container template-article">
 
 
-
-
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Replicating the Latent Variable Estimates of Personalism, Party Autonomy, and Military Autonomy in Wright 2019</h1>
-                        <h4 data-toc-skip class="author">Xavier
-Márquez</h4>
+                        <h4 data-toc-skip class="author">Xavier Márquez</h4>
             
             <h4 data-toc-skip class="date">2024-12-18</h4>
       
@@ -67,13 +64,12 @@ Márquez</h4>
 
     
     
-<p>This vignette describes how one can use the data in this package to
-replicate the latent variable indexes described in <span class="citation">Wright (2021)</span> and used in <span class="citation">Geddes, Wright, and Frantz (2018)</span>. This is based
-on the Stata .do file archived at the <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O" class="external-link">Political
-Science Research and Methods dataverse</a>.</p>
+<p>This vignette describes how one can use the data in this package to replicate the latent variable indexes described in <span class="citation">Wright (2021)</span> and used in <span class="citation">Geddes, Wright, and Frantz (2018)</span>. This is based on the Stata .do file archived at the <a href="https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O" class="external-link">Political Science Research and Methods dataverse</a>.</p>
 <p>First we set up our libraries and data.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/xmarquez/GWFdata" class="external-link">GWFdata</a></span><span class="op">)</span></span>
+<span><span class="co">#&gt; Error in get(paste0(generic, ".", class), envir = get_method_env()) : </span></span>
+<span><span class="co">#&gt;   object 'type_sum.accel' not found</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org" class="external-link">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; ── <span style="font-weight: bold;">Attaching core tidyverse packages</span> ──────────────────────── tidyverse 2.0.0 ──</span></span>
 <span><span class="co">#&gt; <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">dplyr    </span> 1.1.4     <span style="color: #00BB00;">✔</span> <span style="color: #0000BB;">readr    </span> 2.1.5</span></span>
@@ -129,11 +125,11 @@ Science Research and Methods dataverse</a>.</p>
 <span></span>
 <span><span class="va">all_global_vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">global_allvar1</span>, <span class="va">global_allvar2</span>, <span class="va">global_allvar3</span>, <span class="va">global_allvar4</span>, <span class="va">global_allvar5</span>,</span>
 <span>                     <span class="va">global_allvar6</span>, <span class="va">global_allvar7</span>, <span class="va">global_allvar8</span>, <span class="va">global_allvar9</span>, <span class="va">global_allvar10</span><span class="op">)</span></span></code></pre></div>
-<div class="section level2">
-<h2 id="factor-analysis">Factor Analysis<a class="anchor" aria-label="anchor" href="#factor-analysis"></a>
+<div class="section level2" number="0.1">
+<h2 id="factor-analysis">
+<span class="header-section-number">0.1</span> Factor Analysis<a class="anchor" aria-label="anchor" href="#factor-analysis"></a>
 </h2>
-<p>We first replicate the factor analysis in the paper. Figure
-@ref(fig:fig-b1) reproduces figure B-1 of the <span class="citation">Wright (2021)</span> supplementary material.</p>
+<p>We first replicate the factor analysis in the paper. Figure <a href="#fig:fig-b1">1</a> reproduces figure B-1 of the <span class="citation">Wright (2021)</span> supplementary material.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gwf_filtered</span> <span class="op">&lt;-</span> <span class="va">gwf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/all_of.html" class="external-link">all_of</a></span><span class="op">(</span><span class="va">all_global_vars</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -151,13 +147,13 @@ Science Research and Methods dataverse</a>.</p>
 <span><span class="co">#&gt; Warning in cor.smooth(r): Matrix was not positive definite, smoothing was done</span></span>
 <span><span class="co">#&gt; In factor.scores, the correlation matrix is singular, the pseudo inverse is  used</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-b1-1.png" alt="Figure B1 of the appendix: Eigenvalues." width="700"><p class="caption">
-Figure B1 of the appendix: Eigenvalues.
+<span style="display:block;" id="fig:fig-b1"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-b1-1.png" alt="Figure B1 of the appendix: Eigenvalues."><p class="caption">
+Figure 1: Figure B1 of the appendix: Eigenvalues.
 </p>
 </div>
 <pre><code><span><span class="co">#&gt; Parallel analysis suggests that the number of factors =  24  and the number of components =  NA</span></span></code></pre>
-<p>Here are the factor loadings, closely replicating the figures in the
-paper.</p>
+<p>Here are the factor loadings, closely replicating the figures in the paper.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Run EFA with Promax rotation</span></span>
 <span><span class="va">efa_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.html" class="external-link">fa</a></span><span class="op">(</span><span class="va">efa_data</span>, nfactors <span class="op">=</span> <span class="fl">4</span>, rotate <span class="op">=</span> <span class="st">"promax"</span><span class="op">)</span></span>
@@ -264,11 +260,7 @@ paper.</p>
 <span><span class="co">#&gt; SS loadings    8.909 8.112 5.771 4.738</span></span>
 <span><span class="co">#&gt; Proportion Var 0.106 0.097 0.069 0.056</span></span>
 <span><span class="co">#&gt; Cumulative Var 0.106 0.203 0.271 0.328</span></span></code></pre></div>
-<p>The next three plots closely reproduce figure 1 in the paper, showing
-the extent to which individual variables load onto each of the first
-three dimensions of autocratic rule identified in the paper: party
-(Figure @ref(fig:fig-party)), military (Figure @ref(fig:fig-military)),
-and personal (Figure @ref(fig:fig-personal)).</p>
+<p>The next three plots closely reproduce figure 1 in the paper, showing the extent to which individual variables load onto each of the first three dimensions of autocratic rule identified in the paper: party (Figure <a href="#fig:fig-party">2</a>), military (Figure <a href="#fig:fig-military">3</a>), and personal (Figure <a href="#fig:fig-personal">4</a>).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Predict factor scores</span></span>
 <span><span class="va">efa_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/psych/man/factor.scores.html" class="external-link">factor.scores</a></span><span class="op">(</span><span class="va">efa_data</span>, <span class="va">efa_result</span><span class="op">)</span><span class="op">$</span><span class="va">scores</span> <span class="op">|&gt;</span></span>
@@ -306,9 +298,9 @@ and personal (Figure @ref(fig:fig-personal)).</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Factor 1 loadings"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-party-1.png" alt="Party dimension of autocratic rule. Reproduces the top panel of Figure 1." width="700"><p class="caption">
-Party dimension of autocratic rule. Reproduces the top panel of Figure
-1.
+<span style="display:block;" id="fig:fig-party"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-party-1.png" alt="Party dimension of autocratic rule. Reproduces the top panel of Figure 1."><p class="caption">
+Figure 2: Party dimension of autocratic rule. Reproduces the top panel of Figure 1.
 </p>
 </div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -324,9 +316,9 @@ Party dimension of autocratic rule. Reproduces the top panel of Figure
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Factor 2 loadings"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-military-1.png" alt="Military dimension of autocratic rule. Reproduces the middle panel of Figure 1." width="700"><p class="caption">
-Military dimension of autocratic rule. Reproduces the middle panel of
-Figure 1.
+<span style="display:block;" id="fig:fig-military"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-military-1.png" alt="Military dimension of autocratic rule. Reproduces the middle panel of Figure 1."><p class="caption">
+Figure 3: Military dimension of autocratic rule. Reproduces the middle panel of Figure 1.
 </p>
 </div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
@@ -342,14 +334,12 @@ Figure 1.
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Factor 3 loadings"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-personal-1.png" alt="Personal dimension of autocratic rule. Reproduces the bottom panel of Figure 1." width="700"><p class="caption">
-Personal dimension of autocratic rule. Reproduces the bottom panel of
-Figure 1.
+<span style="display:block;" id="fig:fig-personal"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-personal-1.png" alt="Personal dimension of autocratic rule. Reproduces the bottom panel of Figure 1."><p class="caption">
+Figure 4: Personal dimension of autocratic rule. Reproduces the bottom panel of Figure 1.
 </p>
 </div>
-<p>We can use the factor scores to reproduce figure 2 in the paper,
-illustrating the three dimensions of autocratic rule in China (Figure
-@ref(fig:fig-china)).</p>
+<p>We can use the factor scores to reproduce figure 2 in the paper, illustrating the three dimensions of autocratic rule in China (Figure <a href="#fig:fig-china">5</a>).</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gwf</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gwf_country</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">ends_with</a></span><span class="op">(</span><span class="st">"_factor"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -367,15 +357,12 @@ illustrating the three dimensions of autocratic rule in China (Figure
 <span>         color <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/guide_legend.html" class="external-link">guide_legend</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"bottom"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">gwf_country</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-china-1.png" alt="Three dimensions of autocratic rule in China. Reproduces figure 2 of the paper." width="700"><p class="caption">
-Three dimensions of autocratic rule in China. Reproduces figure 2 of the
-paper.
+<span style="display:block;" id="fig:fig-china"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-china-1.png" alt="Three dimensions of autocratic rule in China. Reproduces figure 2 of the paper."><p class="caption">
+Figure 5: Three dimensions of autocratic rule in China. Reproduces figure 2 of the paper.
 </p>
 </div>
-<p>The correlations with measures of democracy reported in Figure 3 of
-the paper can be produced using the <code>democracyData</code> package,
-available from <a href="https://github.com/xmarquez/democracyData" class="external-link">https://github.com/xmarquez/democracyData</a>.
-Figure @ref(fig:fig-correlations-dem) replicates Figure 3 of <span class="citation">Wright (2021)</span>.</p>
+<p>The correlations with measures of democracy reported in Figure 3 of the paper can be produced using the <code>democracyData</code> package, available from <a href="https://github.com/xmarquez/democracyData" class="external-link">https://github.com/xmarquez/democracyData</a>. Figure <a href="#fig:fig-correlations-dem">6</a> replicates Figure 3 of <span class="citation">Wright (2021)</span>.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://xmarquez.github.io/democracyData/" class="external-link">democracyData</a></span><span class="op">)</span></span>
 <span><span class="va">dem_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://xmarquez.github.io/democracyData/reference/generate_democracy_scores_dataset.html" class="external-link">generate_democracy_scores_dataset</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"vdem"</span>, <span class="st">"fh"</span>, <span class="st">"uds_2014"</span>, <span class="st">"polity"</span><span class="op">)</span>, output_format <span class="op">=</span> <span class="st">"wide"</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
@@ -399,18 +386,12 @@ Figure @ref(fig:fig-correlations-dem) replicates Figure 3 of <span class="citati
 <span>  <span class="fu">corrr</span><span class="fu">::</span><span class="fu"><a href="https://corrr.tidymodels.org/reference/rplot.html" class="external-link">rplot</a></span><span class="op">(</span>print_cor <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>  <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-correlations-dem-1.png" alt="Corrleation matrix of latent dimensions of autocratic structure with measures of democracy. Replicates Figure 3 of the paper." width="700"><p class="caption">
-Corrleation matrix of latent dimensions of autocratic structure with
-measures of democracy. Replicates Figure 3 of the paper.
+<span style="display:block;" id="fig:fig-correlations-dem"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-correlations-dem-1.png" alt="Corrleation matrix of latent dimensions of autocratic structure with measures of democracy. Replicates Figure 3 of the paper."><p class="caption">
+Figure 6: Corrleation matrix of latent dimensions of autocratic structure with measures of democracy. Replicates Figure 3 of the paper.
 </p>
 </div>
-<p>Correlations with measures of personalism and military used by <span class="citation">Weeks (2014)</span> and the original GWF dataset <span class="citation">(Geddes, Wright, and Frantz 2014)</span> are also
-reported in <span class="citation">Wright (2021)</span>. This package
-also includes a simplified version of the Weeks dataset (with only the
-basic regime indices), and the original GWF data can be found in the
-democracyData package, which also includes the political regime data of
-<span class="citation">Kailitz (2013)</span>. We can thus replicate
-Table 1 of the paper (@ref(tab:tbl-corrs)).</p>
+<p>Correlations with measures of personalism and military used by <span class="citation">Weeks (2014)</span> and the original GWF dataset <span class="citation">(Geddes, Wright, and Frantz 2014)</span> are also reported in <span class="citation">Wright (2021)</span>. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of <span class="citation">Kailitz (2013)</span>. We can thus replicate Table 1 of the paper (<a href="#tab:tbl-corrs"><strong>??</strong></a>).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gwf_all</span> <span class="op">&lt;-</span> <span class="fu">democracyData</span><span class="fu">::</span><span class="va"><a href="https://xmarquez.github.io/democracyData/reference/gwf_all.html" class="external-link">gwf_all</a></span></span>
 <span><span class="va">weeks</span> <span class="op">&lt;-</span> <span class="fu">GWFdata</span><span class="fu">::</span><span class="va"><a href="../reference/weeks.html">weeks</a></span></span>
@@ -546,12 +527,11 @@ Table 1 of the paper (@ref(tab:tbl-corrs)).</p>
 </tbody>
 </table>
 </div>
-<div class="section level2">
-<h2 id="latent-dimensions-irt-model">Latent Dimensions IRT model<a class="anchor" aria-label="anchor" href="#latent-dimensions-irt-model"></a>
+<div class="section level2" number="0.2">
+<h2 id="latent-dimensions-irt-model">
+<span class="header-section-number">0.2</span> Latent Dimensions IRT model<a class="anchor" aria-label="anchor" href="#latent-dimensions-irt-model"></a>
 </h2>
-<p>The code below closely replicates the item-response theory model of
-autocratic rule described in section 7 of <span class="citation">Wright
-(2021)</span>.</p>
+<p>The code below closely replicates the item-response theory model of autocratic rule described in section 7 of <span class="citation">Wright (2021)</span>.</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span>  <span class="co"># IRT Modeling (2PL model)</span></span>
@@ -626,9 +606,7 @@ autocratic rule described in section 7 of <span class="citation">Wright
 <span></span>
 <span>  <span class="va">gwf</span> <span class="op">&lt;-</span> <span class="va">gwf</span> <span class="op">|&gt;</span> </span>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">pers_irt_scores_mixed</span><span class="op">)</span></span></code></pre></div>
-<p>Note that the variables used in the IRT model can be selected
-directly from the loadings data frame, as the 11 variables with loadings
-greater than 0.3 on the third factor:</p>
+<p>Note that the variables used in the IRT model can be selected directly from the loadings data frame, as the 11 variables with loadings greater than 0.3 on the third factor:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">personalism_vars</span> <span class="op">&lt;-</span> <span class="va">loadings_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">MR3</span> <span class="op">&gt;</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -638,9 +616,7 @@ greater than 0.3 on the third factor:</p>
 <span></span>
 <span><span class="va">personalism_vars</span><span class="op">[</span><span class="op">!</span><span class="va">personalism_vars</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">pers11</span><span class="op">]</span></span>
 <span><span class="co">#&gt; character(0)</span></span></code></pre></div>
-<p>We can use the same procedure to calculate party and military
-dimensions of rule as well, using the necessary party and military
-vars.</p>
+<p>We can use the same procedure to calculate party and military dimensions of rule as well, using the necessary party and military vars.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">party_vars</span> <span class="op">&lt;-</span> <span class="va">loadings_df</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">MR1</span> <span class="op">&gt;</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -685,10 +661,7 @@ vars.</p>
 <span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html" class="external-link">rename_with</a></span><span class="op">(</span>\<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"military_irt_11_"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
 <span>  </span>
 <span><span class="va">gwf</span> <span class="op">&lt;-</span> <span class="va">gwf</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind_cols.html" class="external-link">bind_cols</a></span><span class="op">(</span><span class="va">military_irt_scores</span><span class="op">)</span></span></code></pre></div>
-<p>This index also can be used to visualize the evolution of the latent
-dimensions in China (Figure @ref(fig:fig-irt)), which is not
-significantly different from simply using the factor scores but includes
-the standard error and is on a different scale.</p>
+<p>This index also can be used to visualize the evolution of the latent dimensions in China (Figure <a href="#fig:fig-irt">7</a>), which is not significantly different from simply using the factor scores but includes the standard error and is on a different scale.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gwf</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">gwf_country</span>, <span class="va">year</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html" class="external-link">contains</a></span><span class="op">(</span><span class="st">"_irt_11"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -704,37 +677,30 @@ the standard error and is on a different scale.</p>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">labs</a></span><span class="op">(</span>y <span class="op">=</span> <span class="st">"Personalism dimension"</span>, x <span class="op">=</span> <span class="st">"Year"</span>, linetype <span class="op">=</span> <span class="st">""</span>, color <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html" class="external-link">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">gwf_country</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
-<img src="replicating-wright-2019_files/figure-html/fig-irt-1.png" alt="Evolution of latent dimensions of rule in China. Uses IRT model results." width="700"><p class="caption">
-Evolution of latent dimensions of rule in China. Uses IRT model results.
+<span style="display:block;" id="fig:fig-irt"></span>
+<img src="replicating-wright-2019_files/figure-html/fig-irt-1.png" alt="Evolution of latent dimensions of rule in China. Uses IRT model results."><p class="caption">
+Figure 7: Evolution of latent dimensions of rule in China. Uses IRT model results.
 </p>
 </div>
 </div>
 <div class="section level2 unnumbered">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
 <div id="ref-geddesAutocraticBreakdownRegime2014" class="csl-entry">
-Geddes, Barbara, Joseph Wright, and Erica Frantz. 2014.
-<span>“Autocratic Breakdown and Regime Transitions: <span>A</span> New
-Data Set.”</span> <em>Perspectives on Politics</em> 12 (1): 313–31. <a href="https://doi.org/10.1017/S1537592714000851" class="external-link">https://doi.org/10.1017/S1537592714000851</a>.
+Geddes, Barbara, Joseph Wright, and Erica Frantz. 2014. <span>“Autocratic Breakdown and Regime Transitions: <span>A</span> New Data Set.”</span> <em>Perspectives on Politics</em> 12 (1): 313–31. <a href="https://doi.org/10.1017/S1537592714000851" class="external-link">https://doi.org/10.1017/S1537592714000851</a>.
 </div>
 <div id="ref-geddesHowDictatorshipsWork2018" class="csl-entry">
-———. 2018. <em>How <span>Dictatorships Work</span></em>. Cambridge:
-Cambridge University Press.
+———. 2018. <em>How <span>Dictatorships Work</span></em>. Cambridge: Cambridge University Press.
 </div>
 <div id="ref-kailitzClassifyingPoliticalRegimes2013" class="csl-entry">
-Kailitz, Steffen. 2013. <span>“Classifying Political Regimes Revisited:
-Legitimation and Durability.”</span> <em>Democratization</em> 20 (1):
-39–60.
+Kailitz, Steffen. 2013. <span>“Classifying Political Regimes Revisited: Legitimation and Durability.”</span> <em>Democratization</em> 20 (1): 39–60.
 </div>
 <div id="ref-weeksDictatorsWarPeace2014" class="csl-entry">
-Weeks, Jessica L. 2014. <em>Dictators at <span>War</span> and
-<span>Peace</span></em>. Cornell University Press.
+Weeks, Jessica L. 2014. <em>Dictators at <span>War</span> and <span>Peace</span></em>. Cornell University Press.
 </div>
 <div id="ref-wrightLatentCharacteristicsThat2021" class="csl-entry">
-Wright, Joseph. 2021. <span>“The <span>Latent Characteristics</span>
-That <span>Structure Autocratic Rule</span>.”</span> <em>Political
-Science Research and Methods</em> 9 (1): 1–19. <a href="https://doi.org/10.1017/psrm.2019.50" class="external-link">https://doi.org/10.1017/psrm.2019.50</a>.
+Wright, Joseph. 2021. <span>“The <span>Latent Characteristics</span> That <span>Structure Autocratic Rule</span>.”</span> <em>Political Science Research and Methods</em> 9 (1): 1–19. <a href="https://doi.org/10.1017/psrm.2019.50" class="external-link">https://doi.org/10.1017/psrm.2019.50</a>.
 </div>
 </div>
 </div>
