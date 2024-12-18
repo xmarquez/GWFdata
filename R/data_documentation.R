@@ -1,0 +1,1163 @@
+# GWF --------------------------------------------------------------------
+
+#'Autocratic Regime Features, Version 1.0
+#'
+#'
+#'Barbara Geddes, Joseph Wright, and Erica Frantz. 2018. How Dictatorships Work.
+#'New York: Cambridge University Press. The original data and codebook can be
+#'downloaded from \url{https://sites.psu.edu/dictators/how-dictatorships-work/}.
+#'The documentation below is directly derived from the codebook, with some minor
+#'modifications.
+#'
+#'@section Credits: This research is funded by the National Science Foundation
+#'  (BCS-0904478 and BCS-090463) and the Minerva Research Initiative (ONR
+#'  #N000141211004). The authors thank Joonbum Bae, Shahin Berenji, Nicholas
+#'  Bichay, Ruth Carlitz, Marika Csapo, Sebastin Garrido, Ron Gurantz, Eric
+#'  Kramon, Sarah Leary, Zsuzsanna Magyar, Eoghan McGreevy-Stafford, Rosemary
+#'  Pang, Amanda Rizkallah, Wonjun Song, Valerie Wirtschafte, for excellent
+#'  research assistance. The authors also thank Abel Escribà-Folch for
+#'  invaluable feedback and encouragement for this project.
+#'
+#'@section Label variable definitions:
+#'
+#'  \describe{
+#'
+#'  \item{cowcode}{Correlates of War country code. Countries  that have changed
+#'  territory during the period from 1946 to 2010 have the following country
+#'  codes in this data set: Czechoslovakia (315); East Germany (265); Ethiopia
+#'  (530); Eritrea (531); Russia and Soviet Union (365); South Vietnam (817);
+#'  South Yemen (680); Vietnam/North Vietnam (816); Yemen/ North Yemen (678);
+#'  Yugoslavia/Serbia (435). Note that regimes that either lost (Ethiopia) or
+#'  gained territory (Vietnam/North Vietnam) during the lifetime of the regime
+#'  have the same country code throughout the entire regime spell. Users should
+#'  note this feature of the data set when merging with other data sets.}
+#'
+#'  \item{year}{calendar year}
+#'
+#'  \item{gwf_country}{name of country}
+#'
+#'  \item{gwf_casename}{a country name and set of years during which an
+#'  autocratic regime was in power. An autocratic regime is defined as a set of
+#'  formal and/or informal rules for choosing leaders and policies; there can be
+#'  multiple regimes within an autocratic spell. An autocratic spell is the
+#'  consecutive calendar years in which some autocratic regime ruled the
+#'  country; autocratic spell may be interrupted by years in which a democracy,
+#'  foreign occupier, or failed state controlled the majority of the territory.}
+#'
+#'  \item{gwf_caseid}{a unique identifying number for each autocratic regime in
+#'  power on January 1 of consecutive observation years within the same
+#'  country.}
+#'
+#'  \item{gwf_case_duration}{a counter variable that marks the number of years
+#'  the autocratic regime has been in power, up to and including the observation
+#'  year; duration = 0 in the calendar year the autocratic regime took power;
+#'  duration = 1 in the calendar year for the first calendar year in which the
+#'  autocratic regime holds power on January 1. Duration time includes years the
+#'  autocratic regime held power prior to 1946 for independent countries. There
+#'  is therefore no left-censoring in the data.}
+#'
+#'  \item{gwf_case_fail}{a binary indicator variable for whether the autocratic
+#'  regime fails (i.e., collapses or ends) in the observation year.}
+#'
+#'  \item{gwf_leadername}{the name of the regime leader on January 1 of the
+#'  observation year. A regime leader is the de facto leader of the autocratic
+#'  regime. Some autocratic regime leaders are in power less than a year and are
+#'  not in power on January 1 of an observation year. These leaders are omitted
+#'  from the data set.}
+#'
+#'  \item{gwf_leaderid}{a unique identifying number for each regime leader on
+#'  January 1 of the observation year. A regime leader is the de facto leader of
+#'  the autocratic regime.The same individual may be regime leader in more than
+#'  one autocratic regime. For example, Joaquin Balaguer is considered the
+#'  regime leader of Trujillo's regime in 1962 after Trujillo's assassination in
+#'  1961. Balaguer is also the regime leader of a distinct regime from 1966 to
+#'  1978. (He is coded as such starting in 1967 because the codings are based on
+#'  who is in power on January 1 of an observation year.) The leader id variable
+#'  treats each leader episode as a distinct regime leader. Further, the same
+#'  individual can be regime leader more than once within the lifetime of the
+#'  same autocratic regime. For example, Crown Prince Faisal (he became King in
+#'  1964) is considered the regime leader in Saudi Arabia in 1959 and 1960, as
+#'  well as for a second longer stint from 1962 to his (natural) death in 1975.
+#'  The leader id variable treats these leader episodes as distinct. We
+#'  encourage users to utilize this unique identifier instead of the leader
+#'  names because the latter contain some names shared across regimes and
+#'  different sources spell names differently.}
+#'
+#'  \item{gwf_leader_duration}{a counter variable that marks the number of years
+#'  the regime leader has been in power, up to and including the observation
+#'  year; duration = 1 in the calendar year for the first calendar year in which
+#'  the regime leader holds power on January 1. Duration time includes years the
+#'  regime leader held power prior to 1946 for independent countries.}
+#'
+#'  \item{gwf_leader_fail}{a binary indicator variable for whether the regime
+#'  leader on January 1 of the observation year exits the regime leadership
+#'  position in the observation year. All regime failure events entail
+#'  leadership failure: 223 observation-years in the data are coded as regime
+#'  failure events; 469 observation years contain leadership failure events.
+#'  Thus more than half of leadership failures are in observation years during
+#'  which an autocratic regime does not collapse.}
+#'
+#'  \item{gwf_case_startdate}{numeric code for the calendar date of the
+#'  political event that constitutes the start of the regime.}
+#'
+#'  \item{gwf_case_enddate}{numeric code for the calendar date of the political
+#'  event that constitutes the end of the regime.}
+#'
+#'  \item{gwf_case_prior}{a categorical variable indicating the regime type
+#'  prior to the observed regime-case:
+#'
+#'  * democracy: the country was an independent, sovereign country before the
+#'  observed autocratic regime took power and the regime that preceded it was
+#'  democratic as coded by Geddes, Wright and Frantz (2014).
+#'
+#'  * dictatorship_mil: the country was an independent, sovereign country before
+#'  the observed autocratic regime took power and the regime that preceded it
+#'  was autocratic and led by the military, as coded by Geddes, Wright and
+#'  Frantz (2014).
+#'
+#'  * dictatorship_nonmil: the country was an independent, sovereign country
+#'  before the observed autocratic regime took power and the regime that
+#'  preceded it was autocratic and was NOT led by the military, as coded by
+#'  Geddes, Wright and Frantz (2014); this includes states such Ethiopia prior
+#'  to 1889 and Nepal prior to 1846 that were ruled by prior dynasties.
+#'
+#'  * foreign-occupied: the country was occupied by a foreign military power
+#'  before the observed autocratic regime took power; this includes cases such
+#'  as U.S. occupations of Afghanistan and Iraq after U.S. invasions, post-WWII
+#'  regimes created by conquering super-powers, including Soviet satellite
+#'  states such as East Germany.
+#'
+#'  * not-independent: the country was not an independent, sovereign country
+#'  before the observed autocratic regime took power; this includes
+#'  post-colonial/protectorate regimes, post-Soviet regimes, and regimes in
+#'  countries that secceeded from larger countries, such as Bangladesh and
+#'  Eritrea.
+#'
+#'  * warlord: the country's territory was ruled by warlords without a central
+#'  government prior to the observed autocratic regime.}
+#'
+#'  \item{gwf_leader_firstyear}{the first year the regime leader was in power on
+#'  January 1 of an observation year. This variable is coded to coincide with
+#'  the first year of each leadership spell (accounting for left censoring) of
+#'  an autocratic leader. For example, Hugo Chavez' first year is coded as 2006
+#'  since the autocratic regime started in 2005, even though his first year in
+#'  office was 1999 while the country was still democratic.}
+#'
+#'  \item{gwf_fail_subsregime}{
+#'
+#'  * Coded 0 if the regime has not ended by December 31, 2010.
+#'
+#'  * Coded 1 if the regime that follows the last year of the regime being coded
+#'  is democratic. Democratic is defined as a regime in which the executive
+#'  achieved power through a direct competitive election in which at least ten
+#'  percent of the total population (equivalent to about 40 percent of the adult
+#'  male population) was eligible to vote, all major parties were permitted to
+#'  compete, and neither fraud nor violence determined the election outcome; or
+#'  indirect election by a body at least 60 percent of which was elected in
+#'  direct competitive elections (defined in the same way as for directly
+#'  elected executives) Provisional governments charged with conducting
+#'  elections as part of a transition to democracy are coded democratic if the
+#'  elections actually take place and if the candidate and party elected are
+#'  allowed to take office. This sometimes takes more than a year. If a
+#'  provisional government is following the rules agreed to with regard to power
+#'  sharing and preparing for a fair election, and it lasts through January 1 of
+#'  the year following its creation or longer, but is later ousted by a group
+#'  different from the incumbent group that preceded it, code it as democratic
+#'  (defined as above) during the time it governed. Reconvening a legislature or
+#'  constituent assembly previously elected in a competitive election for the
+#'  purpose of managing a transition to democracy is coded as democratic if the
+#'  transition is carried out.
+#'
+#'  * Coded 2 if the regime in the year following the last year of the regime
+#'  being coded is autocratic, that is, included in our autocratic data set.
+#'
+#'  * Coded 3 if the regime is followed by a period that is neither autocratic
+#'  nor democratic. These include: Periods in which the country has no
+#'  government or has multiple governments, no one of which controls most of the
+#'  resources of the state; periods in which foreign troops occupy the country
+#'  and the occupying power governs it, or exercises major influence over how it
+#'  is governed; failures that occur when a country ceases to exist because it
+#'  has been incorporated into another (e.g., East Germany, South Yemen).}
+#'
+#'  \item{gwf_fail_type}{
+#'
+#'  * Coded 0 if the regime had not ended by December 31, 2010.
+#'
+#'  * Coded 1 if regime insiders changed the rules for choosing leaders and
+#'  policies, or the executive was removed by elite actors other than the
+#'  military, ending the period of time in which one set of formal and informal
+#'  rules remained in force. Use this code for cases in which regime insiders
+#'  changed the formal or informal rules under which elections were held such
+#'  that, for example, all parties could participate or suffrage was extended to
+#'  most of the population, thus changing the identity of the actors who could
+#'  influence policy. Examples might include transitions from indirect military
+#'  rule to democracy and transitions from oligarchy to democracy.
+#'
+#'  * Coded 2 if the incumbent, or a party, coalition, or candidate supported by
+#'  the incumbent, lost an election and allowed the candidate or party that won
+#'  to take office.
+#'
+#'  * Coded 3 if a regime held a competitive election in which no major
+#'  candidate or party supported by the incumbent ran, as a means of choosing
+#'  the next government, and allowed the winner of the election to take office.
+#'  Also use this code if the incumbent group handed power to a transitional
+#'  government for the purpose of holding an election to determine the next
+#'  government -- even if the transitional election did not ultimately occur -- as
+#'  long as democratization was not prevented by the current incumbent.
+#'
+#'  * Coded 4 if the regime was ousted by popular uprising. Popular uprising is
+#'  defined as widespread, mostly unarmed demonstrations, riots, and/or strikes.
+#'
+#'  * Coded 5 if the regime was overthrown by military coup (defined as ouster
+#'  by the military of the regime in power). Overthrows by insurgencies led by
+#'  ex-officers are coded as insurgencies not coups. Handovers to the military
+#'  in the context of popular uprisings, where the military acts as a
+#'  facilitator of regime change, are coded as popular uprisings not coups.
+#'  Transitions from direct to indirect military rule are coded as coups because
+#'  they are made by the military of the regime in power.
+#'
+#'  * Coded 6 if regime is ousted by insurgents, revolutionaries, or combatants
+#'  fighting a civil war. Insurgency, revolution, or civil war defined as
+#'  involving organized armed conflict.
+#'
+#'  * Coded 7 if regime changed through foreign imposition or invasion.
+#'
+#'  * Coded 8 if a new leader chosen in a regular autocratic succession changed
+#'  the formal and informal rules defining the regime after his accession to
+#'  power while himself remaining in power. If the regime's formal and informal
+#'  rules were changed sufficiently to code it as a new regime, it will appear
+#'  in the list of cases as a separate entry. Regular autocratic successions
+#'  defined as: the retirement, illness, or death of the original leader and his
+#'  replacement by someone who previously occupied the formal position of
+#'  successor, or was selected by the retiring leader, or was chosen by a group
+#'  of regime insiders such as the party executive committee, high level
+#'  officers, or a combination of the two. Regular autocratic successions also
+#'  include original leaders who leave office because of term limits and are
+#'  succeeded by a leader chosen by the retiring leader; or a group of regime
+#'  insiders such as the party executive committee, high level officers, or a
+#'  combination of the two.
+#'
+#'  * Coded 9 if regime ends because the state ceases to exist or the government
+#'  loses control of most of its territory.}
+#'
+#'  \item{gwf_fail_violent}{
+#'
+#'  * Coded 0 if the regime had not ended by December 31, 2010.
+#'
+#'  * Coded 1 if non-violent, defined as involving no deaths.
+#'
+#'  * Coded 2 if a few deaths occurred during the transition. If numbers are
+#'  available, 'a few' means 1-25.
+#'
+#'  * Coded 3 if many deaths occurred during the transition. If numbers are
+#'  available, 'many' means more than 25 but less than 1000.
+#'
+#'  * Coded 4 if more than 1000 deaths occurred. (These should be included in
+#'  Fearon & Laitin.)}
+#'
+#'  \item{period1}{binary indicator for the five-year period from 1951-1955.}
+#'
+#'  \item{period2}{binary indicator for the five-year period from 1956-1960.}
+#'
+#'  \item{period3}{binary indicator for the five-year period from 1961-1965.}
+#'
+#'  \item{period4}{binary indicator for the five-year period from 1966-1970.}
+#'
+#'  \item{period5}{binary indicator for the five-year period from 1971-1975.}
+#'
+#'  \item{period6}{binary indicator for the five-year period from 1976-1980.}
+#'  \item{period7)}{binary indicator for the five-year period from 1981-1985.}
+#'  \item{period8)}{binary indicator for the five-year period from 1986-1990.}
+#'  \item{period9)}{binary indicator for the five-year period from 1991-1995.}
+#'  \item{period10)}{binary indicator for the five-year period from 1996-2000.}
+#'  \item{period11)}{binary indicator for the five-year period from 2001-2005.}
+#'  \item{period12)}{binary indicator for the five-year period from 2006-2010.}
+#'  \item{coldwar)}{binary indicator for the Cold War period (1946-1989).}
+#'  \item{ld)}{Log regime-case duration (natural log gwf case duration).}
+#'
+#'  }
+#'
+#'  NOTE: This data set does not include a categorical variable for regime type.
+#'  An autocratic regime type is one of the categories or typologies that group
+#'  similar autocratic regimes together. A regime type indicator is time
+#'  invariant across a regime's duration; examples include: military, party,
+#'  personalist, and monarchy. Those interested in using the autocratic regime
+#'  type data should consult: Barbara Geddes, Joseph Wright, and Erica Frantz.
+#'  2014. "Autocratic Breakdown and Regime Transitions: A New Data Set."
+#'  Perspectives on Politics 12(2): 313-331; data set available
+#'  [here](http://sites.psu.edu/dictators/)
+#'
+#'@section Illustrative examples:
+#'
+#'  When using the data to model autocratic regime survival, the unit of
+#'  analysis is the autocratic regime, which is coded in the variable
+#'  `gwf_casename`. The unit of analysis for authoritarian regime survival is
+#'  not the autocratic spell or the regime leader spell. See Geddes, Wright and
+#'  Frantz (2014) and Wright and Bak (2016) for discussion of differences in
+#'  modeling autocratice regime survival and leader survival.
+#'
+#'  Algeria
+#'
+#'  * 1962-1992: FLN/military
+#'
+#'  * 1992-2010: military rule
+#'
+#'  The autocratic spell lasts from 1962 to 2010 and is right-censored. Each
+#'  bullet point lists a distinct autocratic regime. Regime failure (`gwf_fail`)
+#'  occurs in 1992: the January 11, 1992 military coup that ousted Benjedid. The
+#'  autocratic regime from 1992-2010 is right-censored because it has not failed
+#'  as of December 31, 2010. Algeria has six autocratic regime leaders during
+#'  this period, three in the first regime (Ben Bella, Boumediene, and Benjedid)
+#'  and three in the second regime (Nezzar, Zeroual, and Bouteflika).
+#'
+#'  Chile
+#'
+#'  * 1973-1989: military junta rules under Pinochet
+#'
+#'  The autocratic spell lasts from 1973 to 1989; it is not right-censored. The
+#'  bullet point lists one autocratic regime. Regime failure (gwf fail) and the
+#'  autocratic spell failure occur in 1989. Only one regime failure (`gwf_fail`)
+#'  event occurs at the end of the autocratic spell:   the December 14, 1989
+#'  election that leads to democracy the following year. There is only one
+#'  regime leader (`gwf_leadername`) during this period: Pinochet.
+#'
+#'  Congo/DRC/Zaire
+#'
+#'  * 1960-1997: Mobutu regime
+#'
+#'  * 1997-2010: Kabila (father and son) regime
+#'
+#'  The autocratic spell lasts from 1960 to 2010 and is right-censored. Each of
+#'  the bullet points lists a distinct autocratic regime. Regime failure occurs
+#'  in 1997. Only one regime failure event occurs during the autocratic spell:
+#'  May 17, 1997 when Laurent Kabila's forces take Kinshasa. The autocratic
+#'  regime from 1997-2010 is right-censored because it has not failed as of
+#'  December 31, 2010. There are three regime leaders during this autocratic
+#'  spell, one in the first regime (Mobutu) and two in the second (Laurent
+#'  Kabila and Joseph Kabila).
+#'
+#'  Thailand
+#'
+#'  * 1944-1947: Pridi regime
+#'
+#'  * 1947-1957: Phibun regime
+#'
+#'  * 1957-1973: Sarit, Thanom and the military
+#'
+#'  * 1976-1988: Prem Tinsulanonda and the military
+#'
+#'  * 1991-1992: military junta
+#'
+#'  * 2006-2007: military junta
+#'
+#'  There are six autocratic regimes and four autocratic spells; none are
+#'  right-censored. Each bullet point lists a distinct autocratic regime. The
+#'  first three autocratic regimes (1944-1947, 1947-1957, and 1957-1973) ruled
+#'  consecutively, uninterrupted by a non-autocratic regime, and thus constitute
+#'  one autocratic spell: 1944-1973. The other three autocratic regimes
+#'  (1976-1988, 1991-1992, and 2006-2007) each ended in democracy and thus
+#'  constitute separate autocratic spells. There are nine autocratic regime
+#'  leaders during the sample period: one in the first regime (Pridi); one in
+#'  the second (Luang Phibun Songkhram); two in the third (Sarit and Thanom);
+#'  three in the fourth (Sangad Chalayu, Kriangsak, and Prem Tinsulanonda); one
+#'  in the fifth (Suchinda Kraprayoon); one in the sixth (Sonthi).
+#'
+#'@section Concepts:
+#'
+#'  Military attributes
+#'
+#'  There are five ways that the data code military attributes, as summarized in
+#'  Table 1. Note that different variables pertain specifically to the regime
+#'  leader's career prior to assuming office, while others refer to the group
+#'  that put the leader in power or the type of event through which the regime
+#'  seized power.
+#'
+#'  Table 1: Military attributes
+#'
+#'  | Variable name  | Concept  |
+#'  |---|---|
+#'  | `leadermil` |   regime *leader* is a member of the military prior to assuming office, not a civilian or rebel leader |
+#'  | `militrank`  |  officer rank of regime *leader* prior to assuming power if he was a member of the military at this time; ranks include generals, colonels, and junior officers/NCO's |
+#'  | `ldr_group_military`  | military is the organized *group* that put the regime leader into office  |
+#'  | `ldr_exp_highrank`, `ldr_exp_lowrank`  | regime leader's most important career experience, where he is most likely to have developed his most useful support network  |
+#'  | `seizure_coup`  | the regime seized power in a coup, meaning that the political event used to code the start of the regime is a successful coup  |
+#'
+#'  The first variable in Table 1 identifies whether the regime leader was a
+#'  member of the military or security service prior to assuming office; that
+#'  is, the leader was not a civilian or rebel leader prior to assuming office.
+#'  This is derived using the leaderciv variable in the raw data set and is
+#'  referred to as `leadermil` in the codebook and cleaned data. This variable
+#'  is therefore very similar to the Cheibub, Gandhi and Vreeland (2010) coding
+#'  of military regimes, which relies on the Banks data that codes the
+#'  civilian-military distinction of the leader prior to his assuming office.
+#'
+#'  The second variable identifies the military officer rank of the leader if he
+#'  was a member of the military prior to assuming power. This is militrank in
+#'  the raw data, code book, and cleaned data. There are two leaders in the data
+#'  set who are coded as being members of the military prior to assuming office
+#'  but who were not ranking officers (Najibullah in Afghanistan and Sargsian in
+#'  Armenia); they were security officials but not formal members of the
+#'  military so they are not coded as having military rank.
+#'
+#'  The third variable identifies the group that put the regime leader into
+#'  office. This is derived from the `leaderrole` variable in the raw data; it
+#'  is referred to as `ldr_military` in the codebook and cleaned data. A value
+#'  of 1 on this variable does not mean that leaders placed in power by the
+#'  military were necessarily members of the military and/or military officers
+#'  in the five years prior to assuming office. For example, we code Abdelaziz
+#'  Bouteflika in Algeria and Francois Duvalier in Haiti as being placed in
+#'  power by the military even though they were not members of the military in
+#'  the five years prior to assuming office. Similarly, members of the military
+#'  (in the five years prior to assuming office) may be put into the leader
+#'  position by groups other than the military. For example, Raul Castro, a
+#'  high-ranking Cuban military officer prior to assuming office, was put in the
+#'  leadership position by his family. Empirically, however, those most likely
+#'  to be put into office by the military are members of the military,
+#'  particularly officers.
+#'
+#'  The fourth variable related to the military is the regime leader's most
+#'  important career experience, where he is most likely to have developed his
+#'  most useful support network. This is derived from the `ldrexp` variable in
+#'  the raw data and is referred to as `ldrexp_highrank` and `ldrexp_lowrank` in
+#'  the codebook and clean data. Again, most leaders whose prior experience is
+#'  based in the military will be members of the military prior to assuming
+#'  office. However, some members of the military prior to assuming office, such
+#'  as Anastasio Somoza Debayle and Raul Castro, are not coded as having their
+#'  most important prior career experience in the military. Instead, their
+#'  support network is identified as their family.
+#'
+#'  Finally, the data include a variable that codes the type of regime seizure
+#'  event, or how the regime obtained power. This is derived from the seizure
+#'  variable in the raw data and referred to as `seizure_coup` in the codebook
+#'  and cleaned data. Note that this variable is time-invariant across leaders
+#'  from the same regime. While most leaders who were military members prior to
+#'  assuming power occupy the leadership position in regimes that grabbed power
+#'  via a coup, some regimes born of coups did not put members of the military
+#'  in the leadership position. For example, the third leader of the Algerian
+#'  military regime, Abdelaziz Bouteflika, was put in charge of a regime that
+#'  came to power in a 1992 coup. Conversely, some members of the military
+#'  (i.e., individuals who are not civilians or rebel leaders) were given
+#'  leadership positions in regimes that seized power by methods other than a
+#'  coup, such as Joseph Kabila.
+#'
+#'  Some regimes in the data set are coded as having no professionalized,
+#'  domestically-controlled military, as listed in Table 2. A regime can be
+#'  without a professional domestic military under regime control for a number
+#'  of reasons, but the most common are the following. A foreign power either
+#'  provides security (e.g., Senegal provided security for Gambia until the late
+#'  1980s) or controls the military (e.g., Eastern European countries after WWII
+#'  or Central Asian Republics shortly after independence from the former Soviet
+#'  Union). The latter situation, where a collapsing empire gives way to
+#'  independent countries, is closely related to other instances of observing no
+#'  regime-led military: initial post-independence years in some African
+#'  countries (e.g., Botswana, Congo-Brazzaville, Ghana, Guinea, and Zambia).
+#'  Finally, Costa Rica does not have a military and Honduras did not have a
+#'  professional military until 1948 (Dodd 2005, 55-56). Afghanistan under
+#'  Taliban rule is also coded as not having a professional military
+#'  organization because the Taliban did not transform its informally organized
+#'  insurgent armed forces into a formal military institution after seizing
+#'  power.
+#'
+#' Table 2: Regimes with no domestic professional military
+#'
+#' | Regime-case       | Leader           | First year with no military or foreign officers | Last year with no military or foreign officers |
+#' |-------------------|------------------|-----------------------------------------------|----------------------------------------------|
+#' | Afghanistan 96-01 | Omar             | 1997                                          | 2001                                         |
+#' | Azerbaijan 91-92  | Mutalibov        | 1992                                          | 1992                                         |
+#' | Botswana 66-NA    | Khama, Seretse   | 1967                                          | 1977                                         |
+#' | Cameroon 60-83    | Ahidjo           | 1961                                          | 1962                                         |
+#' | Chad 60-75        | Tombalbaye       | 1961                                          | 1965                                         |
+#' | Congo-Brz 60-63   | Youlou           | 1961                                          | 1963                                         |
+#' | Costa Rica 48-49  | Figueres Ferrer  | 1949                                          | 1949                                         |
+#' | Gabon 60-NA       | M'Ba             | 1961                                          | 1967                                         |
+#' | Gambia 65-94      | Jawara           | 1966                                          | 1989                                         |
+#' | Germany, East 49-90 | Ulbricht       | 1950                                          | 1956                                         |
+#' | Ghana 60-66       | Nkrumah          | 1961                                          | 1961                                         |
+#' | Guinea 58-84      | Toure            | 1959                                          | 1959                                         |
+#' | Honduras 33-56    | Carias           | 1946                                          | 1948                                         |
+#' | Ivory Coast 60-99 | Houphouet-Boigny | 1961                                          | 1961                                         |
+#' | Jordan 46-NA      | Abdullah I       | 1947                                          | 1956                                         |
+#' | Kazakhstan 91-NA  | Nazarbayev       | 1992                                          | 1992                                         |
+#' | Kyrgyzstan 91-05  | Akayev           | 1992                                          | 1994                                         |
+#' | Libya 51-69       | Idris I          | 1952                                          | 1958                                         |
+#' | Madagascar 60-72  | Tsiranana        | 1961                                          | 1969                                         |
+#' | Malawi 64-94      | Banda            | 1965                                          | 1972                                         |
+#' | Oman 1741-NA      | Said             | 1946                                          | 1977                                         |
+#' | Poland 44-89      | Bierut           | 1949                                          | 1956                                         |
+#' | Rwanda 62-73      | Kayibanda        | 1963                                          | 1963                                         |
+#' | Swaziland 68-NA   | Sobhuza II       | 1969                                          | 1973                                         |
+#' | Tajikistan 91-NA  | Nabiyev          | 1992                                          | 1993                                         |
+#' | Turkmenistan 91-NA| Niyazov          | 1992                                          | 1995                                         |
+#' | UAE 71-NA         | Zayid            | 1972                                          | 1985                                         |
+#' | Uzbekistan 91-NA  | Karimov          | 1992                                          | 1994                                         |
+#' | Zambia 67-91      | Kaunda           | 1968                                          | 1970                                         |
+#'
+#'  If the regime is coded as not having a professional military, then some
+#'  military-related variables are coded as not having a particular military
+#'  feature. For example, ethnicity in the military is coded as 0 for all
+#'  variables measuring this concept (`milethnic_dom`, `milethnic_hetero`,
+#'  `milethnic_homo`). When a regime does not have a professional military, this
+#'  does not necessarily mean the regime does not have a paramilitary group
+#'  (`paramil_party`, `paramil_pers`, `paramil_fightrebel`); nor does it
+#'  preclude the leader from consolidating power over the security apparatus
+#'  (`milmerit_pers`, `milnotrial`, `sectyapp_pers`). For example, the UAE did
+#'  not have a regime-led military until 1985, but promotion in the security
+#'  apparatus was still based on personal loyalty to the leader prior to 1985
+#'  (Cordesman 1997, 297). And more than a handful of regime leaders (e.g.,
+#'  Banda in Malawi, M'Ba in Gabon, and Zayid in the UAE) took personal control
+#'  over the security apparatus (`sectyapp_pers`) or created a new paramilitary
+#'  (`paramil_pers`) loyal to themselves (e.g., Tombalbaye in Chad, Karimov in
+#'  Uzbekistan) prior to the regime building its own army or replacing foreign
+#'  officers with national ones. Finally, even when a foreign power has direct
+#'  control over the military, the regime may still have military officers
+#'  present in the cabinet (e.g., East Germany and Poland in the early 1950s).
+#'
+#'  A regime can be coded as not having a support party if: a) the regime did
+#'  not come to power with the support of a pre-existing party and the regime
+#'  has yet to create a new support party; or b) the regime disbands (closes
+#'  down) an existing regime support party. If a regime does not have a support
+#'  party, some variables coded for party features of the regime cannot be
+#'  logically true. For example, if there is no support party it cannot be a
+#'  rubber-stamp party (`partyrbrstmp`); the party cannot control the military
+#'  (`partymilit`); the cabinet cannot contain members of the party
+#'  (`partymins`); the regime leader cannot be the party leader (`partyleader`);
+#'  and the heir cannot be selected from the party (`heirparty`). However, the
+#'  coding of the data allow for the possibility that a regime can have a leader
+#'  whose main prior experience is as a member of a dominant political party
+#'  (`ldrexp_supportparty`), a leader whose initial base of support that put him
+#'  in power was a dominant party (`ldr_domparty`), or a leader was selected in
+#'  an election. Since these variables pertain to the leader they can be coded
+#'  positively even when the regime does not have a support party. For example,
+#'  some post-Soviet leaders' main prior experience and initial bases of support
+#'  were via a (prior) dominant party -- i.e. that of the Soviet Union -- even
+#'  though they either the leader left that party or it was disbanded before the
+#'  regime took power. And many leaders were selected in elections even though
+#'  the dictatorship had no ruling party.
+#'
+#'@section Party genealogy:
+#'
+#'  The data set codes the history of regime support political parties
+#'  (`partyhistory`):
+#'
+#'  * `noparty` no support party
+#'
+#'  * `postseizure_party` created after seizure of power
+#'
+#'  * `priorelection` prior party, created to support the autocratic leader's
+#'  election before the initiation of dictatorship (e.g., Fujimori of Peru)
+#'
+#'  * `priornosupport` prior party, never won more than 10 percent of electoral
+#'  support
+#'
+#'  * `priorwinsupport` prior party, won support under prior autocracy
+#'
+#'  * `insurgent` insurgent/rebel party before initiation of dictatorship
+#'
+#'  * `priordem` prior party won more than 10 percent of support in a prior
+#'  democracy
+#'
+#'  There is another variable that codes a military leader's relationship to
+#'  parties (`militparty`). This variable captures whether a regime leader from
+#'  the military -- i.e., a regime leader who was an active duty or retired
+#'  military/security officer (or NCO) prior to accession to power -- created a
+#'  political party to support himself and the regime. With this variable, we
+#'  derive the following variables:
+#'
+#'  * `noparty` regime leader's supporters are not organized in a party
+#'
+#'  * `ally_regime` leader allies with a pre-existing party after his accession
+#'  to power. The only difference between `ally` and `priorparty` (see below) is
+#'  that the dictator is allied with the old party before assuming office for
+#'  `priorparty`, but after assuming office for `ally`.
+#'
+#'  * `newparty` regime leader or a close ally creates a party to support the
+#'  regime after his accession to office
+#'
+#'  * `priorparty` regime leader's supporters were organized into a party prior
+#'  to his accession to power, and that party now supports the regime
+#'
+#'  There is a large overlap between `militparty_newparty` and
+#'  `partyhistory_postseizure` but this overlap is not perfect because the
+#'  latter refers to the party while the former refers to the behavior of the
+#'  leader if the leader's main prior experience is in the military. An example
+#'  from the Torrijos regime in Panama (1968-1982) illustrates this. After a
+#'  decade in power Torrijos created a new party in 1978 (coded as starting on
+#'  January 1, 1979). Thus both `militparty_newparty` and
+#'  `partyhistory_postseizure` are coded as 1 starting in 1979. However,
+#'  Torrijos died in 1981 and Flores succeeded him (and is coded as the new
+#'  leader starting in 1982). The `partyhistory_postseizure` variable is still
+#'  coded as 1 in 1982 because Flores kept the support party that was created
+#'  post-seizure of power (i.e. post-1968 when the regime seized power). But
+#'  `militparty_newparty` is coded as 0 for 1982 under Flores because he did not
+#'  create a new party; that is the behavior of the second regime leader
+#'  (Flores) was different from that of the first (Torrijos) insofar as the
+#'  first created a new support party while the second did not and instead used
+#'  the support of a party he inherited from his predecessor. In these cases,
+#'  `partyhistory_postseizure` is coded 1, while `militparty_newparty` is coded
+#'  0 and `militparty_priorparty` is coded 1. These instances arise most often
+#'  when the first regime leader creates a new support party after the regime
+#'  seized power but the second regime leader retains the support of this
+#'  post-regime seizure party.
+#'
+#'  While most regimes where the first leader comes to power with a pre-existing
+#'  party organized to run for office in the election just prior to the
+#'  initiation of dictatorship (e.g., Francois Duvalier in Haiti and Heydar
+#'  Aliyev in Azerbaijan) are not military officers just prior to seizing power,
+#'  there is one instance in which a leader's primary prior experience was as a
+#'  high-ranking military officer (Jose Antonio Ramon in Panama (1954-1955))
+#'
+#' @section Variable definitions:
+#'
+#' These definitions are not the same as the coding rules, which are more
+#' detailed. The definitions are only intended to provide readers with a basic
+#' understanding of the type of information contained in the raw data.
+#'
+#' * `ldr_group` (categorical) identify how the regime leader achieved office
+#'   and/or whose support put him in office:
+#'   - `ldr_group_priordem`: prior democratic election
+#'   - `ldr_group_domparty`: dominant party
+#'   - `ldr_group_military`: military junta
+#'   - `ldr_group_insurgency`: insurgency
+#'   - `ldr_group_hereditary`: traditional hereditary succession
+#'   - `ldr_group_civsucc`: civilian autocratic succession
+#'   - `ldr_group_other`: other (interim, clerical). There is only one interim
+#'     autocratic leader, Monje Gutierrez (Bolivia 1947), and only one clerical
+#'     regime, Iran 1979--NA. The other category captures situations such as:
+#'     those in which the incumbent discarded or marginalized his initial
+#'     supporters within a year (demonstrating he did not depend on their
+#'     support); those in which one faction of a ruling group eliminates or
+#'     marginalizes others; those in which the groups involved in the regime
+#'     were changing; those in which there is a father to son (or other close
+#'     relative) transition in regimes that lack rules about hereditary
+#'     succession.
+#'   - `ldr_group_foreign`: foreigners played a dominant role in choosing the
+#'     incumbent
+#'
+#' * `seizure` (categorical) how the regime obtained power:
+#'   - `seizure_family`: seizure by an armed family
+#'   - `seizure_coup`: military coup
+#'   - `seizure_rebel`: insurgency/rebels
+#'   - `seizure_uprising`: popular uprising
+#'   - `seizure_election`: election
+#'   - `seizure_succession`: authoritarian incumbent rule change to alter
+#'     composition of ruling coalition
+#'   - `seizure_foreign`: foreign imposed
+#'
+#' * `ldr_exp` (categorical) regime leader's most important career experience
+#'   where he is most likely to have developed his most useful support network:
+#'   - `ldr_exp_highrank`: high-ranking military officer
+#'   - `ldr_exp_lowrank`: low-ranking military officer or NCO
+#'   - `ldr_exp_rebel`: leader of armed insurgency that brought regime to power
+#'   - `ldr_exp_demelect`: leader in a prior party organized to run in
+#'     competitive democratic elections
+#'   - `ldr_exp_supportparty`: position in regime support party and not relative
+#'     of previous leader of the same regime
+#'   - `ldr_exp_pers_loyal`: chosen by prior regime leaders because of
+#'     competence or loyalty and is NOT an officer, party leader, or rebel
+#'   - `ldr_exp_pers_relative`: leader is a close relative of a prior leader of
+#'     the same regime, who was not himself a hereditary monarch
+#'   - `ldr_exp_rulingfamily`: member of the traditional ruling family and
+#'     chosen in the way that is traditional for the tribe or country in
+#'     question
+#'   - `ldr_exp_other_leader`: does not fit other prior codes
+#'
+#' * `supportparty` (binary):
+#'   - `0`: no support party
+#'   - `1`: support party
+#'
+#'  * `partyleader` (binary):
+#'
+#'    - `0` no support party OR party leader selected by regime leader OR party
+#'  leader selection influenced by regime leader OR party leader is not regime
+#'  leader and selection controlled by group that excludes the regime leader
+#'
+#'    - `1` party leader is regime leader or relative of regime leader
+#'
+#'  * `partyhistory` (categorical)
+#'
+#'   - `partyhistory_noparty` no support party
+#'
+#'   - `partyhistory_postseizure` party created after seizure of power
+#'
+#'   - `partyhistory_priorelection` prior party, created to support leader
+#'  election (e.g. Fujimori)
+#'
+#'   - `partyhistory_priornosupport` prior party, won little electoral support
+#'
+#'   - `partyhistory_priorwinsupport` prior party, ruled under prior autocracy
+#'
+#'   - `partyhistory_insurgent` insurgent/rebel party
+#'
+#'   - `partyhistory_priordem` prior party won support in a democracy
+#'
+#'  * `partymins` (ordinal)
+#'
+#'    - `0` no support party
+#'
+#'    - `1` 1/3 or more of cabinet positions go to non-party members
+#'
+#'    - `2` some but fewer than 1/3 of cabinet members are not party members
+#'
+#'    - `3` cabinet ministers (except defense) are party members
+#'
+#'  * `partymilit` (ordinal)
+#'
+#'    - missing if no party or military
+#'
+#'    - `0` military controls party OR no party
+#'
+#'    - `1` no party interference in military or military interference in party
+#'
+#'    - `2` party and military influence each other
+#'
+#'    - `3` party interferes in military but does not impose party structure
+#'
+#'    - `4` party imposes party structure on military
+#'
+#'  * `partymilit2` (binary)
+#'
+#'    - `0` regime led by a party and has a military (coded 1 to 4 on partymilit)
+#'
+#'    - `1` regime is not led by a party or lacks a military
+#'
+#'  * `partyexcom` (categorical)
+#'
+#'   - `partyexcom_pers` regime leader chooses party executive committee
+#'
+#'   - `partyexcom_faction` faction that supports the regime leader dominates
+#'  the party executive committee
+#'
+#'   - `partyexcom_oppose` competition for seats on the party executive
+#'  committee
+#'
+#'   - `partyexcom_noexcom` no party executive committee (includes no support
+#'  party)
+#'
+#'  * `localorgzns` (ordinal)
+#'
+#'    - `0` no support party
+#'
+#'    - `1` support party has few local organizations
+#'
+#'    - `2` local-level branch organizations link party militants to citizens
+#'
+#'  * `excomcivn` (ordinal)
+#'
+#'    - `0` no support party
+#'
+#'    - `1` party executive committee is 2/3 or more military or retired military
+#'
+#'    - `2` party executive committee has military or retired military, but less
+#'  than 2/3
+#'
+#'    - `3` party executive committee is civilian or ex-insurgent
+#'
+#'  * `multiethnic` (binary)
+#'
+#'    - `0` no support party OR monoethnic
+#'
+#'    - `1` party leadership is multi-ethnic/region/religious
+#'
+#'  * `monoethnic` (binary)
+#'
+#'    - `0` no support party OR multiethnic
+#'
+#'    - `1` party leadership is dominated by people from particular
+#'  ethnicities/regions/religions
+#'
+#'  * `heirparty` (binary)
+#'
+#'    - `0` not 1
+#'
+#'    - `1` heir is high party official but not close relative of the leader
+#'
+#'  * `heirfamily` (binary)
+#'
+#'    - `0` not 1
+#'
+#'    - `1` heir is same family as a leader before him within the same regime
+#'
+#'  * `heirciv` (ordinal)
+#'
+#'    - `0` military succession
+#'
+#'    - `1` successor from insurgency
+#'
+#'    - `2` civilian succession
+#'
+#'  * `heirclan` (binary)
+#'
+#'    - `0` regime leader not from same clan, tribe, or ethnic group; or
+#'  ethnicity/clan/tribe not politically relevant
+#'
+#'    - `1` regime leader (or heir apparent) from same clan, tribe, or ethnic
+#'  group as previous leader
+#'
+#'  * `legcompetn` (ordinal)
+#'
+#'    - `0` no legislature
+#'
+#'    - `1` appointed by regime leader
+#'
+#'    - `2` indirect selection of legislative body by elected lower level body
+#'
+#'    - `3` all seats from uncontested elections
+#'
+#'    - `4` only front groups and ruling party members
+#'
+#'    - `5` all seats from ruling front/party, but competitive multi-candidate
+#'  elections
+#'
+#'    - `6` only independents seated in opposition
+#'
+#'    - `7` some opposition seats from elections but less than 25% (includes
+#'  independents)
+#'
+#'    - `8` 25% or more opposition seats from elections (includes independents)
+#'
+#'  * `leaderciv` (binary)
+#'
+#'    - `0` leader was NOT civilian before being in power
+#'
+#'    - `1` leader was civilian before being in power
+#'
+#'  * `leadermil` (binary)
+#'
+#'    - `0` leader was NOT member of the military before assuming power
+#'
+#'    - `1` leader was member of the military before assuming power
+#'
+#'  * `leaderrebel` (binary)
+#'
+#'    - `0` leader was NOT member of an insurgency before assuming power
+#'
+#'    - `1` leader was member of an insurgency before assuming power
+#'
+#'  * `cabciv` (ordinal)
+#'
+#'    - `0` most important cabinet positions held by military OR regime leader
+#'
+#'    - `1` cabinet positions held by civilians or insurgents, but some military
+#'  in positions other than defense
+#'
+#'    - `2` civilian cabinet (except defense)
+#'
+#'  * `cabmil` (ordinal)
+#'
+#'    - `0` most positions (except defense) held by civilians OR regime leader
+#'
+#'    - `1` cabinet positions held by civilians or insurgents, but some military
+#'  in positions other than defense
+#'
+#'    - `2` most important cabinet positions held by military
+#'
+#'  * `militrank` (ordinal)
+#'
+#'    - `0` leader was not a (retired) member of the military within five years of
+#'  accession; has honorific military title; or was member of an insurgency
+#'
+#'    - `1` leader was rank below major
+#'
+#'    - `2` leader was a colonel in a military that includes generals
+#'
+#'    - `3` leader was a colonel in a military that does not include generals
+#'
+#'    - `4` leader was general, admiral, or other highest ranking office
+#'
+#'  * `milmerit_pers` (ordinal)
+#'
+#'    - `0` regime leader does not use loyalty in promotion AND no widespread
+#'  forced retirement OR no military
+#'
+#'    - `1` promotions of top officers loyal to the regime leader or from his
+#'  group
+#'
+#'    - `2` regime leader promotes officers loyal to himself or from his ethnic,
+#'  tribal, regional, or religious group OR widespread forced retirements
+#'
+#'  * `milmerit_mil` (ordinal)
+#'
+#'    - `0` officer promotion based on personal loyalty to leader OR widespread
+#'  forces retirement OR no military
+#'
+#'    - `1` promotions of top officers loyal to the regime leader or from his
+#'  group
+#'
+#'    - `2` regime leader does not promote officers loyal to himself or from his
+#'  ethnic, tribal, regional, or religious group AND no widespread forced
+#'  retirement
+#'
+#'  * `milconsult` (binary)
+#'
+#'    - `0` no consultative body; regime leader not from the military
+#'
+#'    - `1` consultative body in which the heads of service branches are
+#'  represented; or if country specialists describe some other routinized method
+#'  of consultation
+#'
+#'  * `milnotrial` (ordinal) regime leader imprisons/kills officers or officers
+#'  from other groups without fair trial
+#'
+#'    - `0` regime leader does NOT kill/imprison out-group officers OR no military
+#'  OR foreign officers staff military
+#'
+#'    - `1` regime leader imprisons/kills officers from other groups without fair
+#'  trial
+#'
+#'  * `militparty` (categorical) whether regime leader created his own support
+#'  party
+#'
+#'   - `militparty_noparty` regime leader's supporters are not organized in a
+#'  party
+#'
+#'   - `militparty_ally` regime leader allies with a pre-existing party
+#'
+#'   - `militparty_newparty` regime leader or a close ally creates a party to
+#'  support the regime after his accession to office
+#'
+#'   - `militparty_priorparty` regime leader's supporters were organized into a
+#'  party prior to his accession to power and that party now supports the regime
+#'
+#'   - `militparty_priorparty` regime leader's supporters were organized into a
+#'  party prior to his accession to power and that party now supports the regime
+#'
+#'   - `militparty_notmilitary` regime leader is not an active duty or retired
+#'  military/security officer
+#'
+#'  * `milethnic` (categorical) whether officers do not come from more than one
+#'  ethnic, religious, or regional group
+#'
+#'   - `milethnic_inclusive` high ranking officers come from most of the larger,
+#'  politically salient ethnic, religious, and regional groups OR no salient
+#'  cleavage
+#'
+#'   - `milethnic_hetero` salient cleavage AND one or a few regions,
+#'  ethnicities, or religions are overrepresented in officer corps AND officers
+#'  include some high ranking members from different backgrounds
+#'
+#'   - `milethnic_homo` salient cleavage AND nearly all high ranking officers
+#'  come from one or a few regions or groups
+#'
+#'  * `nomilitary` (binary)
+#'
+#'    - `0` military present AND coded as one of three types of milethnic
+#'
+#'    - `1` no military or officers are mostly foreign
+#'
+#'  * `ldrrotation` (binary)
+#'
+#'    - `0` no rotation procedure; or regime leader is not from the military
+#'
+#'    - `1` procedure for regular succession or rotation of the executive among
+#'  military officers (including rigged elections)
+#'
+#'  * `electldr` (categorical)
+#'
+#'   - `electldr_family` regime leader was chosen using traditional rules by a
+#'  ruling family
+#'
+#'   - `electldr_notelect` not elected
+#'
+#'   - `electldr_priordict` elected in prior dictatorship
+#'
+#'   - `electldr_1candidate` elected in one candidate election
+#'
+#'   - `electldr_1faction` elected in election against opposition candidates but
+#'  no opposition party
+#'
+#'   - `electldr_multileg` selected by legislature elected in multiparty
+#'  elections
+#'
+#'   - `electldr_multiexec` elected in multiparty executive elections
+#'
+#'   - `electldr_priordem` elected in prior democracy
+#'
+#'  * `legnoms` (categorical)
+#'
+#'   - `legnoms_noleg` no legislative body
+#'
+#'   - `legnoms_nooppose` no opposition in legislative election
+#'
+#'   - `legnoms_indirect` legislature selected by indirect election from lower
+#'  body; comprised of local/tribal notables; or selected by regime insiders as
+#'  societal representatives
+#'
+#'   - `legnoms_veto`` opposition allowed to contest but regime holds veto power
+#'  of candidate selection
+#'
+#'   - `legnoms_noveto` opposition or independents allowed to contest; and
+#'  ruling party candidate selection influenced by local party leaders or
+#'  faction members
+#'
+#'   - `legnoms_priordem` legislature chosen in prior democratic regime or
+#'  competitive pre-independence election
+#'
+#'  * `plebiscite` (binary) Has the regime leader held a plebiscite to
+#'  legitimize or consolidate his rule?
+#'
+#'    - `0` no plebiscites on the regime leader's occupancy of the executive or
+#'  the continuation of the regime have been held
+#'
+#'    - `1` one or more plebiscites have been held
+#'
+#'  * `partyrbrstmp` (binary)
+#'
+#'    - `0` party executive committee is a rubberstamp; no party executive
+#'  committee; no support party
+#'
+#'    - `1` party executive committee has some policy independence from the regime
+#'  leader
+#'
+#'  * `officepers` (binary)
+#'
+#'    - `0` regime leader does not have discretion over appointments to high
+#'  office
+#'
+#'    - `1` regime leader has discretion over appointments to high office or
+#'  appoints relatives to these positions
+#'
+#'  * `leaderrelatvs` (binary)
+#'
+#'    - `0` none of the regime leader's relatives occupy very influential offices
+#'  in the government, ruling party, or military. Relatives  are defined as
+#'  including spouses, parents, grandparents, children (including adopted and
+#'  step children), grandchildren, siblings, half-siblings, uncles, aunts,
+#'  half-uncles, half-aunts, first cousins, and the spouse of all of these.
+#'
+#'    - `1` one or more of the regime leader's relatives occupy high offices in
+#'  the government, ruling party, or military
+#'
+#'  * `paramil` (categorical)
+#'
+#'   - `paramil_noparamil` no paramilitary forces created
+#'
+#'   - `paramil_fightrebel` paramilitary forces created to fight civil war on
+#'  regime's side
+#'
+#'   - `paramil_party` party militia or paramilitary organized by dominant party
+#'
+#'   - `paramil_pers` regime leader creates paramilitary forces, a president's
+#'  guard, or new security forces apparently loyal to himself
+#'
+#'  * `sectyapp` (categorical)
+#'
+#'   - `sectyapp_mil` security apparatus controlled by the military
+#'
+#'   - `sectyapp_party` security apparatus controlled by dominant party
+#'
+#'   - `sectyapp_pers` security apparatus controlled personally by regime leader
+#'
+#'@references Cheibub, Jose Antonio, Jennifer Gandhi and James Raymond Vreeland.
+#'  2010. "Democracy and Dictatorship Revisited." Public Choice 143:67--101.
+#'
+#'  Cordesman, Anthony H. 1997. Kuwait: Recovery and security after the Gulf
+#'  War. Boulder, CO: Westview Press.
+#'
+#'  Dodd, Thomas J. 2005. Tiburcio Carias: Portrait of a Honduran political
+#'  leader. Baton Rouge, LA: Lousiana State University Press.
+#'
+#'  Geddes, Barbara, Joseph Wright and Erica Frantz. 2014. "Autocratic Regimes:
+#'  A New Data Set." Perspectives on Politics 12(2):313--331.
+#'
+#'  Wright, Joseph and Daehee Bak. 2016. "Measuring Autocratic Regime
+#'  Stability." Research & Politics 3(1).
+"gwf"
+
+# GWF IRT Scores ------------------------------------------------------
+
+#' Factor scores and IRT estimates of latent dimensions using the [gwf] data.
+#'
+#' The factor scores are replicated from Wright, Joseph. 2021. “The Latent
+#' Characteristics That Structure Autocratic Rule.” Political Science Research
+#' and Methods 9 (1): 1–19. https://doi.org/10.1017/psrm.2019.50. See the
+#' [vignette](https://xmaquez.github.io/GWFdata/vignettes/articles/replicating-wright-2019.html)
+#' for details.
+#'
+#'  \describe{
+#'
+#'  \item{gwf_country}{name of country}
+#'
+#'  \item{cowcode}{Correlates of War country code. Countries  that have changed
+#'  territory during the period from 1946 to 2010 have the following country
+#'  codes in this data set: Czechoslovakia (315); East Germany (265); Ethiopia
+#'  (530); Eritrea (531); Russia and Soviet Union (365); South Vietnam (817);
+#'  South Yemen (680); Vietnam/North Vietnam (816); Yemen/ North Yemen (678);
+#'  Yugoslavia/Serbia (435). Note that regimes that either lost (Ethiopia) or
+#'  gained territory (Vietnam/North Vietnam) during the lifetime of the regime
+#'  have the same country code throughout the entire regime spell. Users should
+#'  note this feature of the data set when merging with other data sets.}
+#'
+#'  \item{year}{calendar year}
+#'
+#'  \item{pers_irt_11_F1}{IRT scores for personalism, 11 items}
+#'
+#'  \item{pers_irt_11_F1}{SE for IRT scores for personalism, 11 items}
+#'
+#'  \item{pers_irt_10_F1}{IRT scores for personalism, 10 items}
+#'
+#'  \item{pers_irt_10_F1}{SE for IRT scores for personalism, 10 items}
+#'
+#'  \item{pers_irt_8_F1}{IRT scores for personalism, 8 items}
+#'
+#'  \item{pers_irt_8_F1}{SE for IRT scores for personalism, 8 items}
+#'
+#'  \item{pers_irt_11_full_info_F1}{IRT scores for personalism, full information, 11 items}
+#'
+#'  \item{pers_irt_11_full_info_F1}{SE for IRT scores for personalism, full information, 11 items}
+#'
+#'  \item{party_irt_11_F1}{IRT scores for party, 11 items}
+#'
+#'  \item{party_irt_11_F1}{SE for IRT scores for party, 11 items}
+#'
+#'  \item{military_irt_11_F1}{IRT scores for party, 11 items}
+#'
+#'  \item{military_irt_11_F1}{SE for IRT scores for party, 11 items}
+#'
+#'  \item{party_factor}{Scores on first factor of factor analysis (party).}
+#'
+#'  \item{military_factor}{Scores on second factor of factor analysis (military).}
+#'
+#'  \item{personalism_factor}{Scores on third factor of factor analysis (personalism).}
+#'
+#'  \item{fourth_factor}{Scores on fourth factor of factor analysis (other).}
+#'
+#'  }
+"gwf_irt"
+
+#' Simplified dataset from Weeks 2014
+#'
+#' This is a subset of the data used in Jessica L. Weeks, 2014. Dictators at War
+#' and Peace. Cornell University Press. The actual dataset is taken from the
+#' replication data posted at
+#' [https://www.jessicalpweeks.com/research.html](https://www.jessicalpweeks.com/research.html)
+#'
+#' @section Variables:
+#'
+#' \describe{
+#'   \item{extended_country_name}{The full name of the country.}
+#'   \item{GWn}{Gleditsch-Ward country code.}
+#'   \item{cown}{Correlates of War numeric country code.}
+#'   \item{ccode1}{Alternative country code for some analysis.}
+#'   \item{year}{The year of the observation.}
+#'   \item{abbrev1}{Abbreviation for the country name.}
+#'   \item{demjlw_2014_1}{Binary indicator for democratic regimes, based on Weeks (2014) coding.}
+#'   \item{juntajlw_2014_1}{Binary indicator for military junta regimes, based on Weeks (2014) coding.}
+#'   \item{strongmanjlw_2014_1}{Binary indicator for strongman regimes, based on Weeks (2014) coding.}
+#'   \item{machinejlw_2014_1}{Binary indicator for machine regimes, based on Weeks (2014) coding.}
+#'   \item{bossjlw_2014_1}{Binary indicator for boss regimes, based on Weeks (2014) coding.}
+#'   \item{regimejlw_2014_1}{Categorical variable indicating regime type, based on Weeks (2014) coding.}
+#'   \item{militarygeddes_2014_1}{Binary indicator for military regimes, based on Geddes, Wright, and Frantz (2014).}
+#'   \item{personalgeddes_2014_1}{Binary indicator for personalist regimes, based on Geddes, Wright, and Frantz (2014).}
+#'   \item{in_GW_system}{Binary indicator for whether the country is in the Gleditsch-Ward system for the year.}
+#' }
+#'
+#' @references Jessica L. Weeks. 2014. Dictators at War and Peace. Cornell
+#'   University Press. Barbara Geddes, Joseph Wright, and Erica Frantz. 2014.
+#'   "Autocratic Regimes: A New Data Set." Perspectives on Politics
+#'   12(2):313-331.
+#'
+"weeks"
+
+
+
+
