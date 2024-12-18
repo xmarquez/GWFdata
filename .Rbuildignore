@@ -1,0 +1,12 @@
+^_pkgdown\.yml$
+^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
+^data-raw$
+^\.travis\.yml$
+^man-roxygen$
+^README\.Rmd$
+^README-.*\.png$
+^docs$
+^vignettes$
+^vignettes/articles$
