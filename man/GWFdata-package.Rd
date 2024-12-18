@@ -12,6 +12,7 @@ Contains the replication dataset for book "How Dictatorships Work" by Barbara Ge
 Useful links:
 \itemize{
   \item \url{https://github.com/xmarquez/GWFdata}
+  \item \url{https://xmarquez.github.io/GWFdata/}
   \item Report bugs at \url{https://github.com/xmarquez/GWFdata/issues}
 }
 

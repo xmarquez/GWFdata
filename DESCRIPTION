@@ -14,7 +14,7 @@ Encoding: UTF-8
 LazyData: true
 Suggests: testthat,
     rmarkdown
-URL: https://github.com/xmarquez/GWFdata
+URL: https://github.com/xmarquez/GWFdata, https://xmarquez.github.io/GWFdata/
 BugReports: https://github.com/xmarquez/GWFdata/issues
 Imports: 
     tibble

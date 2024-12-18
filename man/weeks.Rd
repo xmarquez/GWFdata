@@ -41,6 +41,7 @@ replication data posted at
 \references{
 Jessica L. Weeks. 2014. Dictators at War and Peace. Cornell
 University Press. Barbara Geddes, Joseph Wright, and Erica Frantz. 2014.
-"Autocratic Regimes: A New Data Set." Perspectives on Politics 12(2):313-331.
+"Autocratic Regimes: A New Data Set." Perspectives on Politics
+12(2):313-331.
 }
 \keyword{datasets}

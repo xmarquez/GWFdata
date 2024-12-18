@@ -11,3 +11,4 @@
 ^vignettes$
 ^vignettes/articles$
 ^pkgdown$
+^\.github$
