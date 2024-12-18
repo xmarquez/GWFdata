@@ -1,5 +1,7 @@
 ---
-title: "Replicating Wright 2019"
+title: "Replicating the Latent Variable Estimates of Personalism, Party Autonomy, and Military Autonomy in Wright 2019"
+author: "Xavier Márquez"
+date: "`r lubridate::today()`"
 bibliography: "Wright Replication.bib"
 output:  bookdown::html_notebook2
 ---
@@ -195,7 +197,7 @@ data |>
   corrr::rplot(print_cor = TRUE)  +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-Correlations with measures of personalism and military used by @weeksDictatorsWarPeace2014 and the original GWF dataset [@geddesAutocraticBreakdownRegime2014] are also reported in @wrightLatentCharacteristicsThat2021. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of @kailitzClassifyingPoliticalRegimes2013. We can thus replicate Table 1 of the paper (\@ref(tbl:tbl-corrs)).
+Correlations with measures of personalism and military used by @weeksDictatorsWarPeace2014 and the original GWF dataset [@geddesAutocraticBreakdownRegime2014] are also reported in @wrightLatentCharacteristicsThat2021. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of @kailitzClassifyingPoliticalRegimes2013. We can thus replicate Table 1 of the paper (\@ref(tbl-corrs)).
 
 ```{r, message = FALSE}
 #| label: tbl-corrs
@@ -283,7 +285,8 @@ The code below closely replicates the item-response theory model of autocratic r
   pers_irt_mixed <- mirt::mirt(gwf |> 
                             select(all_of(c(pers10_mixed, "milmerit_pers"))), 
                           model = mixed_model,
-                          itemtype = "Rasch", SE = TRUE)
+                          itemtype = "Rasch", SE = TRUE,
+                          verbose = FALSE)
   
   pers_irt_scores_mixed <- mirt::fscores(pers_irt_model_8, full.scores.SE = TRUE) |>
     as_tibble() |>
@@ -369,12 +372,6 @@ gwf |>
   geom_pointrange(aes(ymin = F1-SE_F1, ymax = F1 + SE_F1)) +
   labs(y = "Personalism dimension", x = "Year", linetype = "", color = "") +
   facet_wrap(~gwf_country)
-```
-
-```{r, include = FALSE}
-gwf_irt <- gwf |> select(gwf_country, cowcode, year, contains("_irt_"), ends_with("_factor"))
-gwf <- gwf |> select(-contains("_irt_"), -ends_with("_factor"), -matches("pr\\d$"))
-usethis::use_data(gwf, gwf_irt, overwrite = TRUE)
 ```
 
 ## References
