@@ -3,7 +3,14 @@ title: "Replicating the Latent Variable Estimates of Personalism, Party Autonomy
 author: "Xavier Márquez"
 date: "`r lubridate::today()`"
 bibliography: "Wright Replication.bib"
-output:  bookdown::html_notebook2
+output: 
+  bookdown::html_document2:
+    base_format: rmarkdown::html_vignette
+    fig_caption: yes
+    toc: true
+pkgdown:
+  as_is: true
+warning: false
 ---
 
 This vignette describes how one can use the data in this package to replicate the latent variable indexes described in @wrightLatentCharacteristicsThat2021 and used in @geddesHowDictatorshipsWork2018. This is based on the Stata .do file archived at the [Political Science Research and Methods dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O). 
