@@ -8,7 +8,7 @@ Authors@R: person("Xavier", "Marquez", role=c("aut", "cre"),
 License: GPL-3
 Depends:
     R (>= 2.10)
-RoxygenNote: 6.1.0
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true
