@@ -4,7 +4,7 @@
 \name{GWFdata-package}
 \alias{GWFdata}
 \alias{GWFdata-package}
-\title{GWFdata: Replication data for the book "How Dictatorships Work" by Barbara Geddes, Joseph Wright, and Erica Frantz}
+\title{GWFdata: Packages the replication data for the book "How Dictatorships Work" by Barbara Geddes, Joseph Wright, and Erica Frantz for use in R}
 \description{
 Contains the replication dataset for book "How Dictatorships Work" by Barbara Geddes, Joseph Wright, and Erica Frantz, including the codebook.
 }
