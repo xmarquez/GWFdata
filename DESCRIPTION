@@ -12,9 +12,17 @@ RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat,
-    rmarkdown
+Suggests: 
+    testthat,
+    rmarkdown,
+    bookdown,
+    knitr,
+    democracyData (>= 0.5.1),
+    mirt,
+    psych
 URL: https://github.com/xmarquez/GWFdata, https://xmarquez.github.io/GWFdata/
 BugReports: https://github.com/xmarquez/GWFdata/issues
 Imports: 
     tibble
+Remotes: 
+    xmarquez/democracyData
