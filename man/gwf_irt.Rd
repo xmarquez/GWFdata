@@ -14,7 +14,7 @@ gwf_irt
 The factor scores are replicated from Wright, Joseph. 2021. “The Latent
 Characteristics That Structure Autocratic Rule.” Political Science Research
 and Methods 9 (1): 1–19. https://doi.org/10.1017/psrm.2019.50. See the
-\href{https://xmaquez.github.io/GWFdata/articles/replicating-wright-2019.html}{vignette}
+\href{https://xmarquez.github.io/GWFdata/articles/replicating-wright-2019.html}{vignette}
 for details.
 }
 \details{

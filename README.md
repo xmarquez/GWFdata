@@ -13,7 +13,8 @@ IRT model described in Wright (2021), based on the Stata .do file
 archived at the [Political Science Research and Methods
 dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O).
 An article with detailed instructions on how to do this is [included in
-this website](GWFdata/articles/replicating-wright-2019.html).
+this
+website](https://xmarquez.github.io/GWFdata/articles/replicating-wright-2019.html).
 
 ## Installation
 

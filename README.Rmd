@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-GWFdata archives the data used in @wrightLatentCharacteristicsThat2021 and @geddesHowDictatorshipsWork2018. It also includes a subset of the personalism indicators in @weeksDictatorsWarPeace2014. The primary purpose of the package is to replicate the IRT model described in @wrightLatentCharacteristicsThat2021, based on the Stata .do file archived at the [Political Science Research and Methods dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O). An article with detailed instructions on how to do this is [included in this website](GWFdata/articles/replicating-wright-2019.html).  
+GWFdata archives the data used in @wrightLatentCharacteristicsThat2021 and @geddesHowDictatorshipsWork2018. It also includes a subset of the personalism indicators in @weeksDictatorsWarPeace2014. The primary purpose of the package is to replicate the IRT model described in @wrightLatentCharacteristicsThat2021, based on the Stata .do file archived at the [Political Science Research and Methods dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O). An article with detailed instructions on how to do this is [included in this website](https://xmarquez.github.io/GWFdata/articles/replicating-wright-2019.html).  
 
 ## Installation
 
