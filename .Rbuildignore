@@ -10,3 +10,4 @@
 ^docs$
 ^vignettes$
 ^vignettes/articles$
+^pkgdown$
