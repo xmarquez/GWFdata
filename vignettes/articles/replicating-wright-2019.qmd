@@ -1,16 +1,14 @@
 ---
-title: "Replicating the Latent Variable Estimates of Personalism, Party Autonomy, and Military Autonomy in Wright 2019"
+title: "Replicating the Latent Variable Estimates of Personalism, Party Autonomy, and Military Autonomy in Wright 2021"
 author: "Xavier Márquez"
 date: "`r lubridate::today()`"
 bibliography: "Wright Replication.bib"
-output: 
-  bookdown::html_document2:
-    base_format: rmarkdown::html_vignette
-    fig_caption: yes
-    toc: true
-pkgdown:
-  as_is: true
+output: html
 warning: false
+vignette: >
+  %\VignetteIndexEntry{Replicating Wright 2021}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
 ---
 
 This vignette describes how one can use the data in this package to replicate the latent variable indexes described in @wrightLatentCharacteristicsThat2021 and used in @geddesHowDictatorshipsWork2018. This is based on the Stata .do file archived at the [Political Science Research and Methods dataverse](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/3BC21O). 
@@ -68,7 +66,7 @@ all_global_vars <- c(global_allvar1, global_allvar2, global_allvar3, global_allv
 
 ## Factor Analysis
 
-We first replicate the factor analysis in the paper. Figure \@ref(fig:fig-b1) reproduces figure B-1 of the @wrightLatentCharacteristicsThat2021 supplementary material.
+We first replicate the factor analysis in the paper. @fig-b1 reproduces figure B-1 of the @wrightLatentCharacteristicsThat2021 supplementary material.
 
 ```{r}
 #| label: fig-b1
@@ -96,7 +94,7 @@ efa_result <- fa(efa_data, nfactors = 4, rotate = "promax")
 print(efa_result$loadings, cutoff = 0.3) 
 ```
 
-The next three plots closely reproduce figure 1 in the paper, showing the extent to which individual variables load onto each of the first three dimensions of autocratic rule identified in the paper: party (Figure \@ref(fig:fig-party)), military (Figure \@ref(fig:fig-military)), and personal (Figure \@ref(fig:fig-personal)).
+The next three plots closely reproduce figure 1 in the paper, showing the extent to which individual variables load onto each of the first three dimensions of autocratic rule identified in the paper: party (@fig-party), military (@fig-military), and personal (@fig-personal).
 
 ```{r}
 #| label: fig-party
@@ -164,7 +162,8 @@ loadings_df |>
   labs(x = "", y = "Factor 3 loadings") +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-We can use the factor scores to reproduce figure 2 in the paper, illustrating the three dimensions of autocratic rule in China (Figure \@ref(fig:fig-china)).
+
+We can use the factor scores to reproduce figure 2 in the paper, illustrating the three dimensions of autocratic rule in China (@fig-china).
 
 ```{r}
 #| label: fig-china
@@ -186,7 +185,8 @@ gwf |>
          color = guide_legend(position = "bottom")) +
   facet_wrap(~gwf_country)
 ```
-The correlations with measures of democracy reported in Figure 3 of the paper can be produced using the `democracyData` package, available from [https://github.com/xmarquez/democracyData](https://github.com/xmarquez/democracyData). Figure \@ref(fig:fig-correlations-dem) replicates Figure 3 of @wrightLatentCharacteristicsThat2021.
+
+The correlations with measures of democracy reported in Figure 3 of the paper can be produced using the `democracyData` package, available from [https://github.com/xmarquez/democracyData](https://github.com/xmarquez/democracyData). @fig-correlations-dem replicates Figure 3 of @wrightLatentCharacteristicsThat2021.
 
 ```{r correlations_dem, message = FALSE}
 #| label: fig-correlations-dem
@@ -204,7 +204,8 @@ data |>
   corrr::rplot(print_cor = TRUE)  +
   theme(axis.text.x = element_text(angle = 90, hjust = 1))
 ```
-Correlations with measures of personalism and military used by @weeksDictatorsWarPeace2014 and the original GWF dataset [@geddesAutocraticBreakdownRegime2014] are also reported in @wrightLatentCharacteristicsThat2021. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of @kailitzClassifyingPoliticalRegimes2013. We can thus replicate Table 1 of the paper (\@ref(tab:tbl-corrs)).
+
+Correlations with measures of personalism and military autonomy used by @weeksDictatorsWarPeace2014 and the original GWF dataset [@geddesAutocraticBreakdownRegime2014] are also reported in @wrightLatentCharacteristicsThat2021. This package also includes a simplified version of the Weeks dataset (with only the basic regime indices), and the original GWF data can be found in the democracyData package, which also includes the political regime data of @kailitzClassifyingPoliticalRegimes2013. We can thus replicate Table 1 of the paper (@tbl-corrs).
 
 ```{r, message = FALSE}
 #| label: tbl-corrs
@@ -361,7 +362,7 @@ gwf <- gwf |> bind_cols(military_irt_scores)
 
 ```
 
-This index also can be used to visualize the evolution of the latent dimensions in China (Figure \@ref(fig:fig-irt)), which is not significantly different from simply using the factor scores but includes the standard error and is on a different scale.
+This index also can be used to visualize the evolution of the latent dimensions in China (@fig-irt), which is not significantly different from simply using the factor scores but includes the standard error and is on a different scale.
 
 ```{r}
 #| label: fig-irt
