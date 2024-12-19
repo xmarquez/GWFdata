@@ -21,7 +21,8 @@ Suggests:
     mirt,
     psych,
     tidyverse,
-    corrr
+    corrr,
+    quarto
 URL: https://github.com/xmarquez/GWFdata, https://xmarquez.github.io/GWFdata/
 BugReports: https://github.com/xmarquez/GWFdata/issues
 Imports: 
